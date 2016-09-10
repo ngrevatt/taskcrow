@@ -1,0 +1,16 @@
+models:
+  image: tp33/django
+  links:
+    -  db:db
+  volumes:
+    - "$PWD/models:/app"
+  ports:
+    - "8001:8000"
+  command: bash -c "mod_wsgi-express start-server --reload-on-changes models/wsgi.py"
+
+db:
+  image: mysql:5.7.14
+  environment:
+    MYSQL_ROOT_PASSWORD: '$$3cureUS'
+  volumes:
+    - db/:/var/lib/mysql
