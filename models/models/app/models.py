@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+# UserProfile (E)
+# Customer (E)
+# Crow (E)
+# Category (N)
+# Task (N)
