@@ -1,9 +1,9 @@
 models:
-  image: tp33/django
+  build: ./models
   links:
     -  db:db
   volumes:
-    - "$PWD/models:/app"
+    - "$PWD/models/src:/app"
   ports:
     - "8001:8000"
   command: bash -c "mod_wsgi-express start-server --reload-on-changes models/wsgi.py"

@@ -1,5 +1,5 @@
 upcompose:
-	docker-compose up
+	docker-compose up --build
 
 rmcompose:
 	docker-compose rm
