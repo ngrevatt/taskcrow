@@ -30,7 +30,7 @@ class ServiceProvider(models.Model):
         return self.verification.successful
 
 
-class Verification
+class Verification(models.Model):
     service_provider = models.OneToOneField(ServiceProvider, primary_key=True)
     successful = models.BooleanField()
     failed = models.BooleanField()
@@ -38,6 +38,7 @@ class Verification
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
+
 
 class Task(models.Model):
     user = models.OneToOneField(User, primary_key=True)
