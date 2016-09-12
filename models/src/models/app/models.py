@@ -23,7 +23,7 @@ class Customer(models.Model):
 
 
 class ServiceProvider(models.Model):
-    user = models.OneToToneField(User, primary_key=True)
+    user = models.OneToOneField(User, primary_key=True)
 
     @property
     def is_verified(self):
@@ -32,20 +32,23 @@ class ServiceProvider(models.Model):
 
 class Verification(models.Model):
     service_provider = models.OneToOneField(ServiceProvider, primary_key=True)
+    complete = models.BooleanField()
     successful = models.BooleanField()
-    failed = models.BooleanField()
 
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
+
+    class Meta(object):
+        verbose_name_plural = "categories"
 
 
 class Task(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     category = models.ForeignKey(Category)
     description = models.TextField()
-    cost = models.IntField()
+    cost = models.IntegerField()
     created_date = models.DateTimeField(default=timezone.now)
-    due_date = models.DateTimeFIeld()
+    due_date = models.DateTimeField()
     complete = models.BooleanField(default=False)
-    
+

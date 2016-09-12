@@ -5,8 +5,9 @@ models:
   volumes:
     - "$PWD/models/src:/app"
   ports:
-    - "8001:8000"
-  command: bash -c "mod_wsgi-express start-server --reload-on-changes models/wsgi.py"
+    - "8000:8000"
+    - "8001:8001"
+  command: bash -c "mod_wsgi-express start-server --reload-on-changes /app/models/wsgi.py --port 8001"
 
 db:
   image: mysql:5.7.14
@@ -14,3 +15,4 @@ db:
     MYSQL_ROOT_PASSWORD: '$$3cureUS'
   volumes:
     - db/:/var/lib/mysql
+
