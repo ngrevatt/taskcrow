@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class UserProfile(models.Model):
@@ -13,15 +14,26 @@ class UserProfile(models.Model):
         upload_to="profile_pictures/",
     )
 
-    phone_number =
+    phone_number = PhoneNumberField(blank=True)
 
 
 class Customer(models.Model):
     user = models.OneToOneField(User, primary_key=True)
 
+
 class ServiceProvider(models.Model):
     user = models.OneToToneField(User, primary_key=True)
-    is_verified = models.BooleanField(default=False)
+
+    @property
+    def is_verified(self):
+        return self.verification.successful
+
+
+class Verification
+    service_provider = models.OneToOneField(ServiceProvider, primary_key=True)
+    successful = models.BooleanField()
+    failed = models.BooleanField()
+
 
 # Category (N)
 # Task (N)
