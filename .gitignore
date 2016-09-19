@@ -92,3 +92,4 @@ ENV/
 db/
 .DS_Store
 *.swp
+media/
