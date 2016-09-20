@@ -14,11 +14,11 @@ request to check that user was created:
 
 request to update an exisiting user:
 
-   curl -X PUT -F "first_name=john" -F "last_name=snow" -F "email=rad@virginia.edu" -F "username=jsnow" -F "phone_number=+5712747486" "http://localhost:8000/api/v1/user_profile/3/"
+    curl -X PUT -F "first_name=john" -F "last_name=snow" -F "email=rad@virginia.edu" -F "username=jsnow" -F "phone_number=+5712747486" "http://localhost:8000/api/v1/user_profile/3/"
     
 request to delete an exisiting user:
 
-  curl -X DELETE "http://localhost:8000/api/v1/user_profile/3/" 
+    curl -X DELETE "http://localhost:8000/api/v1/user_profile/3/" 
 
 in order to work with other modesl, use the endpoints listed at:
 
