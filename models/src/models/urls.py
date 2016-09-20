@@ -21,7 +21,6 @@ from .app import views
 
 
 router = routers.DefaultRouter()
-router.register(r'user', views.UserViewSet)
 router.register(r'user_profile', views.UserProfileViewSet)
 router.register(r'customer', views.CustomerViewSet)
 router.register(r'service_provider', views.ServiceProviderViewSet)

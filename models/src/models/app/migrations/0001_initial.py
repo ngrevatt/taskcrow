@@ -2,15 +2,13 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import phonenumber_field.modelfields
 import django.utils.timezone
-from django.conf import settings
+import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0006_require_contenttypes_0002'),
     ]
 
     operations = [
@@ -20,23 +18,26 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
                 ('name', models.CharField(max_length=50)),
             ],
+            options={
+                'verbose_name_plural': 'categories',
+            },
         ),
         migrations.CreateModel(
             name='Customer',
             fields=[
-                ('user', models.OneToOneField(serialize=False, primary_key=True, to=settings.AUTH_USER_MODEL)),
+                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
             ],
         ),
         migrations.CreateModel(
             name='ServiceProvider',
             fields=[
-                ('user', models.OneToOneField(serialize=False, primary_key=True, to=settings.AUTH_USER_MODEL)),
+                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
             ],
         ),
         migrations.CreateModel(
             name='Task',
             fields=[
-                ('user', models.OneToOneField(serialize=False, primary_key=True, to=settings.AUTH_USER_MODEL)),
+                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
                 ('description', models.TextField()),
                 ('cost', models.IntegerField()),
                 ('created_date', models.DateTimeField(default=django.utils.timezone.now)),
@@ -48,17 +49,36 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserProfile',
             fields=[
-                ('user', models.OneToOneField(serialize=False, primary_key=True, to=settings.AUTH_USER_MODEL)),
-                ('profile_picture', models.ImageField(upload_to='profile_pictures/')),
+                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
+                ('username', models.CharField(max_length=128)),
+                ('first_name', models.CharField(max_length=128)),
+                ('last_name', models.CharField(max_length=128)),
+                ('email', models.EmailField(max_length=254)),
                 ('phone_number', phonenumber_field.modelfields.PhoneNumberField(max_length=128, blank=True)),
             ],
         ),
         migrations.CreateModel(
             name='Verification',
             fields=[
-                ('service_provider', models.OneToOneField(serialize=False, primary_key=True, to='app.ServiceProvider')),
+                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
+                ('complete', models.BooleanField()),
                 ('successful', models.BooleanField()),
-                ('failed', models.BooleanField()),
+                ('service_provider', models.OneToOneField(to='app.ServiceProvider')),
             ],
+        ),
+        migrations.AddField(
+            model_name='task',
+            name='user',
+            field=models.OneToOneField(to='app.UserProfile'),
+        ),
+        migrations.AddField(
+            model_name='serviceprovider',
+            name='user',
+            field=models.OneToOneField(to='app.UserProfile'),
+        ),
+        migrations.AddField(
+            model_name='customer',
+            name='user',
+            field=models.OneToOneField(to='app.UserProfile'),
         ),
     ]
