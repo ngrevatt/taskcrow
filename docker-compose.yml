@@ -7,7 +7,7 @@ models:
   ports:
     - "8000:8000"
     - "8080:8080"
-  command: bash -c "mod_wsgi-express start-server --reload-on-changes /app/models/wsgi.py --port 8000 --url-alias /static /app/collected_static"
+  command: bash -c "python /app/manage.py migrate && python /app/manage.py loaddata /app/fixtures.json && mod_wsgi-express start-server --reload-on-changes /app/models/wsgi.py --port 8000 --url-alias /static /app/collected_static"
 
 db:
   image: mysql:5.7.14
