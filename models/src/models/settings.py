@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'cs4501',
         'USER': 'www',
         'PASSWORD': '$3cureUS',
-        'HOST': 'db',
+        'HOST': 'mysql',
         'PORT': '3306',
     }
 }
