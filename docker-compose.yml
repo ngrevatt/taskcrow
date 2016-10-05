@@ -18,7 +18,7 @@ exp:
   ports:
     - "8001:8001"
     - "8081:8081"
-  command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/exp/wsgi.py --port 8001"
+  command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/exp/wsgi.py --port 8001 --url-alias /static /app/collected_static"
 
 web:
   build: ./web
@@ -29,5 +29,5 @@ web:
   ports:
     - "8000:8000"
     - "8080:8080"
-  command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/web/wsgi.py --port 8000"
+  command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/web/wsgi.py --port 8000 --url-alias /static /app/collected_static"
 
