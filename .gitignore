@@ -93,3 +93,4 @@ db/
 .DS_Store
 *.swp
 media/
+.idea/
