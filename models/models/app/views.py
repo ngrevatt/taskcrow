@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from .serializers import *
 from .models import *
 
@@ -6,7 +6,7 @@ class ListAsDictMixin(object):
     def list(self, request):
         resp = super().list(request)
         resp.data = {
-            "items": resp.data,
+            "records": resp.data,
         }
         return resp
 
@@ -40,4 +40,5 @@ class CategoryViewSet(ListAsDictMixin, viewsets.ModelViewSet):
 class TaskViewSet(ListAsDictMixin, viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    filter_fields = ("id", "category",)
 
