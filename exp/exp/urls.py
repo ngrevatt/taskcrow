@@ -16,5 +16,7 @@ from django.conf.urls import include, url
 from .app.views import *
 
 urlpatterns = [
-    url(r"^CategoriesPage$", CategoriesPage.as_view())
+    url(r"^CategoriesPage$", CategoriesPage.as_view()),
+    url(r"^TaskDetail$", TaskDetail.as_view())
+
 ]
