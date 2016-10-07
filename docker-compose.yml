@@ -5,9 +5,9 @@ models:
   volumes:
     - "$PWD/models:/app"
   ports:
-    - "8002:8002"
-    - "8082:8082"
-  command: bash -c "python /app/manage.py migrate && python /app/manage.py loaddata /app/fixtures.json && mod_wsgi-express start-server --reload-on-changes /app/models/wsgi.py --port 8002 --url-alias /static /app/collected_static"
+    - "8002:80"
+    - "8082:8080"
+  command: bash -c "python /app/manage.py migrate && python /app/manage.py loaddata /app/fixtures.json && mod_wsgi-express start-server --reload-on-changes /app/models/wsgi.py --url-alias /static /app/collected_static --port 80"
 
 exp:
   build: ./exp
@@ -16,9 +16,9 @@ exp:
   volumes:
     - "$PWD/exp:/app"
   ports:
-    - "8001:8001"
-    - "8081:8081"
-  command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/exp/wsgi.py --port 8001 --url-alias /static /app/collected_static"
+    - "8001:80"
+    - "8081:8080"
+  command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/exp/wsgi.py --url-alias /static /app/collected_static --port 80"
 
 web:
   build: ./web
@@ -27,7 +27,7 @@ web:
   volumes:
     - "$PWD/web:/app"
   ports:
-    - "8000:8000"
+    - "8000:80"
     - "8080:8080"
-  command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/web/wsgi.py --port 8000 --url-alias /static /app/collected_static"
+  command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/web/wsgi.py --url-alias /static /app/collected_static --port 80"
 
