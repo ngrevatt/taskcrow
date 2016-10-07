@@ -1,10 +1,18 @@
-from django.http import HttpResponse
-from django.template import loader
+import requests
+from django.http.shortcuts import render_to_response
 
-def accesshomepage(request):
-    template = loader.get_template('web/homepage.html')
-    return HttpResponse(template.render(request))
 
-def accessinfopage(request):
-    template = loader.get_template('web/info.html')
-    return HttpResponse(template.render(request))
+def categories_view(request):
+    r = requests.get("http://exp/CategoriesPage")
+    ctx = r.json()
+    return render_to_response("app/categories.html", ctx)
+
+
+def category_task_list_view(request):
+    payload = {
+        "id": requests.GET.get("id", None)
+    }
+    r = requests.get("http://exp/CategoryTaskListPage", params=payload)
+    ctx = r.json()
+    return render_to_response("app/categories.html", ctx)
+
