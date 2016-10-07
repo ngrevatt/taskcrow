@@ -17,6 +17,6 @@ from .app.views import *
 
 urlpatterns = [
     url(r"^CategoriesPage$", CategoriesPage.as_view()),
-    url(r"^CategoryTaskListPage$", CategoryTaskListPage.as_view())
     url(r"^TaskDetailPage$", TaskDetailPage.as_view()),
+    url(r"^CategoryTaskListPage$", CategoryTaskListPage.as_view())
 ]
