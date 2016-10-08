@@ -41,7 +41,7 @@ class ModelsTestCase(TestCase):
         self.assertEquals(got, want)
 
     def test_customer(self):
-        got = self.client.get("api/v1/customer/1/").data
+        got = self.client.get("/api/v1/customer/1/").data
         want = {
             "id": 1,
             "user": 1
@@ -49,7 +49,7 @@ class ModelsTestCase(TestCase):
         self.assertEquals(got, want)
 
     def test_service_provider(self):
-        got = self.client.get("api/v1/customer/1/").data
+        got = self.client.get("/api/v1/service_provider/1/").data
         want = {
             "id": 1,
             "user": 2
@@ -57,11 +57,11 @@ class ModelsTestCase(TestCase):
         self.assertEqual(got, want)
 
     def test_verification(self):
-        got = self.client.get("api/v1/verification/1/").data
+        got = self.client.get("/api/v1/verification/1/").data
         want = {
             "id": 1,
-            "complete": true,
-            "successful": true,
+            "complete": True,
+            "successful": True,
             "service_provider": 1 
         }
         self.assertEqual(got, want)
