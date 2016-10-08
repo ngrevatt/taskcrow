@@ -14,7 +14,31 @@
   </div>
   <div class="row">
       <div class="col-md-12">
-        {{ task }}
+
+          <table class = "table">
+
+              <tbody>
+                  <tr>
+                      <td>Customer</td>
+                      <td>Category</td>
+                      <td>Cost</td>
+                      <td>Date Created</td>
+                      <td>Date Due</td>
+                      <td>Completed</td>
+                  </tr>
+
+                  <tr>
+                      <td>{{ task.customer }}</td>
+                      <td>{{ task.category }}</td>
+                      <td>{{ task.cost }}</td>
+                      <td>{{ task.created_date }}</td>
+                      <td>{{ task.due_date }}</td>
+                      <td>{{ task.complete }}</td>
+                  </tr>
+              </tbody>
+
+          </table>
+
       </div>
   </div>
 </div>
