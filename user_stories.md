@@ -7,3 +7,4 @@
 5. User E is doing a renovation and needs to source some work to contractors but has heard horror stories of contractors leaving town before the work is finished. User E uses TaskCrow to find trustable contractors with the necessary skills though the reviews and search features, all while ensuring that the work will be completed. 
 6. User F needed to buy his girlfriend a present for their 3rd anniversary, but was swamped with work. F started to search service sites for a personal shopper, but could not find one. Then, F found that TaskCrow had the service. User F uses TaskCrow to get his girlfriend the present.
 
+As the tests for project 3 are read-only and involve only the model layer, our stories are reflected in that our tests verify the success of operations that would be necessary for every story. 
