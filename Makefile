@@ -32,3 +32,5 @@ webshell:
 dbshell:
 	docker run -it --name mysql-cmdline --rm --link mysql:db mysql:5.7.14 /bin/bash
 
+test:
+	docker exec -it taskcrow_models_1 python /app/manage.py test
