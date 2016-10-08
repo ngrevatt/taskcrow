@@ -39,3 +39,29 @@ class ModelsTestCase(TestCase):
 	    "phone_number": "+41524204242"
 	}
         self.assertEquals(got, want)
+
+    def test_customer(self):
+        got = self.client.get("api/v1/customer/1/").data
+        want = {
+            "id": 1,
+            "user": 1
+        }
+        self.assertEquals(got, want)
+
+    def test_service_provider(self):
+        got = self.client.get("api/v1/customer/1/").data
+        want = {
+            "id": 1,
+            "user": 2
+        }
+        self.assertEqual(got, want)
+
+    def test_verification(self):
+        got = self.client.get("api/v1/verification/1/").data
+        want = {
+            "id": 1,
+            "complete": true,
+            "successful": true,
+            "service_provider": 1 
+        }
+        self.assertEqual(got, want)
