@@ -1,9 +1,14 @@
 mysql:
-	docker run --name mysql -d -e MYSQL\_ROOT\_PASSWORD='$$3cureUS' -v "${PWD}/db":/var/lib/mysql mysql:5.7.14 \
-            mysql -uroot -p'$$3cureUS' -h db \
-            "create user 'www'@'%' identified by '$$3cureUS'; \
-            create database cs4501 character set utf8; \
-            grant all on cs4501.* to 'www'@'i%'";
+	rm -rf db
+	mkdir db
+	docker run --name mysql -d -e MYSQL\_ROOT\_PASSWORD='$$3cureUS' -v "${PWD}/db":/var/lib/mysql mysql:5.7.14
+
+# This won't work for a few seconds after making the mysql target.
+initmysql:
+	docker run -it --rm --link mysql:db mysql:5.7.14 mysql -uroot -p"\$$3cureUS" -h db -v -e \
+		"CREATE USER 'www'@'%' IDENTIFIED BY '\$$3cureUS';\
+		CREATE DATABASE cs4501 CHARACTER SET utf8;\
+		GRANT ALL PRIVILEGES ON *.* TO 'www'@'%';"
 
 stopmysql:
 	docker stop mysql
