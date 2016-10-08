@@ -31,11 +31,116 @@ class ModelsTestCase(TestCase):
     def test_user_profile_detail(self):
         got = self.client.get("/api/v1/user_profile/1/").data
         want = {
-	    "id": 1,
-	    "username": "bob",
-	    "first_name": "Bob",
-	    "last_name": "Jones",
-	    "email": "bob@email.com",
-	    "phone_number": "+41524204242"
-	}
+            "id": 1,
+            "username": "bob",
+            "first_name": "Bob",
+            "last_name": "Jones",
+            "email": "bob@email.com",
+            "phone_number": "+41524204242"
+        }
+        self.assertEquals(got, want)
+
+    def test_category_list(self):
+        got = self.client.get("/api/v1/category/").data
+        want = {
+            "records": [
+                {
+                    "id": 1,
+                    "name": "Yard Work"
+                },
+                {
+                    "id": 2,
+                    "name": "Cleaning"
+                }
+            ]
+        }
+        self.assertEquals(got, want)
+
+    def test_category_detail(self):
+        got = self.client.get("/api/v1/category/1/").data
+        want = {
+            "id": 1,
+            "name": "Yard Work",
+        }
+        self.assertEquals(got, want)
+
+    def test_task_list(self):
+        got = self.client.get("/api/v1/task/").data
+        want = {
+            "records": [
+                {
+                    "id": 1,
+                    "description": "Rake leaves",
+                    "cost": 100,
+                    "created_date": "2016-09-15T17:02:00Z",
+                    "due_date": "2016-09-23T05:02:00Z",
+                    "complete": False,
+                    "customer": {
+                        "id": 1,
+                        "user": {
+                            "id": 1,
+                            "username": "bob",
+                            "first_name": "Bob",
+                            "last_name": "Jones",
+                            "email": "bob@email.com",
+                            "phone_number": "+41524204242"
+                        }
+                    },
+                    "category": {
+                        "id": 1,
+                        "name": "Yard Work"
+                    }
+                },
+                {
+                    "id": 2,
+                    "description": "Powerwash house",
+                    "cost": 100,
+                    "created_date": "2016-09-15T17:02:00Z",
+                    "due_date": "2016-09-23T05:02:00Z",
+                    "complete": False,
+                    "customer": {
+                        "id": 1,
+                        "user": {
+                            "id": 1,
+                            "username": "bob",
+                            "first_name": "Bob",
+                            "last_name": "Jones",
+                            "email": "bob@email.com",
+                            "phone_number": "+41524204242"
+                        }
+                    },
+                    "category": {
+                        "id": 2,
+                        "name": "Cleaning"
+                    }
+                }
+            ]
+        }
+        self.assertEquals(got, want)
+
+    def test_task_detail(self):
+        got = self.client.get("/api/v1/task/1/").data
+        want = {
+            "id": 1,
+            "description": "Rake leaves",
+            "cost": 100,
+            "created_date": "2016-09-15T17:02:00Z",
+            "due_date": "2016-09-23T05:02:00Z",
+            "complete": False,
+            "customer": {
+                "id": 1,
+                "user": {
+                    "id": 1,
+                    "username": "bob",
+                    "first_name": "Bob",
+                    "last_name": "Jones",
+                    "email": "bob@email.com",
+                    "phone_number": "+41524204242"
+                }
+            },
+            "category": {
+                "id": 1,
+                "name": "Yard Work"
+            }
+        }
         self.assertEquals(got, want)
