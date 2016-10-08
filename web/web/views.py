@@ -14,5 +14,5 @@ def category_task_list_view(request, cid):
     }
     r = requests.get("http://exp/CategoryTaskListPage", params=payload)
     ctx = r.json()
-    return render_to_response("app/categories_task_list.html", ctx)
+    return render_to_response("app/category_task_list.html", ctx)
 
