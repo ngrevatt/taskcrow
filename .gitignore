@@ -94,3 +94,4 @@ db/
 *.swp
 media/
 .idea/
+*.sqlite3
