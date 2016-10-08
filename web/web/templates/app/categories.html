@@ -1,19 +1,23 @@
 {% extends "app/base.html" %}
 
+{% block style %}
+  <style>
+  </style>
+{% endblock style %}
+
 {% block content %}
 <div class="container">
   <div class="row">
-
-    <div class="col-lg-12">
+    <div class="col-md-12">
       <h1 class="page-header">Categories</h1>
     </div>
-
+  </div>
+  <div class="row">
     {% for category in categories %}
       <div class="col-md-3">
-        <a href="{% url 'category_task_list_view' category.id %}">{{ category.name }}</a>
+        <a href="{% url 'category_task_list_view' category.id %}" class="task">{{ category.name }}</a>
       </div>
     {% endfor %}
   </div>
 </div>
-
 {% endblock content %}

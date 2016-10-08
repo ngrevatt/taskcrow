@@ -1,4 +1,21 @@
 {% extends "app/base.html" %}
 
+{% block style %}
+  <style>
+  </style>
+{% endblock style %}
 
-
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="page-header">{{ task.description }}</h1>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+        {{ task }}
+      </div>
+  </div>
+</div>
+{% endblock content %}
