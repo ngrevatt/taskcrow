@@ -36,4 +36,5 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
+        depth = 2
 

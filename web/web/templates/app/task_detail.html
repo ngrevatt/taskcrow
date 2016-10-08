@@ -13,33 +13,40 @@
     </div>
   </div>
   <div class="row">
-      <div class="col-md-12">
+    <div class="col-md-3">
+      <table class = "table">
+        <tbody>
+          <tr>
+            <td>Customer</td>
+            <td>{{ task.customer.user.first_name }}  {{ task.customer.user.last_name }}</td>
+          </tr>
+          <tr>
+            <td>Category</td>
+            <td><a href="{% url 'category_task_list_view' task.category.id %}">{{ task.category.name }}</a></td>
+          </tr>
+          <tr>
+            <td>Cost</td>
+            <td>{{ task.cost }}</td>
+          </tr>
+          <tr>
+            <td>Date Created</td>
+            <td>{{ task.created_date }}</td>
+          </tr>
+          <tr>
+            <td>Date Due</td>
+            <td>{{ task.due_date }}</td>
+          </tr>
+          <tr>
+            <td>Completed</td>
+            <td>{{ task.complete }}</td>
+          </tr>
 
-          <table class = "table">
+          <tr>
+          </tr>
+        </tbody>
 
-              <tbody>
-                  <tr>
-                      <td>Customer</td>
-                      <td>Category</td>
-                      <td>Cost</td>
-                      <td>Date Created</td>
-                      <td>Date Due</td>
-                      <td>Completed</td>
-                  </tr>
-
-                  <tr>
-                      <td>{{ task.customer }}</td>
-                      <td>{{ task.category }}</td>
-                      <td>{{ task.cost }}</td>
-                      <td>{{ task.created_date }}</td>
-                      <td>{{ task.due_date }}</td>
-                      <td>{{ task.complete }}</td>
-                  </tr>
-              </tbody>
-
-          </table>
-
-      </div>
+      </table>
+    </div>
   </div>
 </div>
 {% endblock content %}

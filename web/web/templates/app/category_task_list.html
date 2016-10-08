@@ -16,7 +16,7 @@
     {% for task in tasks %}
       <div class="col-md-3">
         <a href="{% url 'task_detail_view' task.id %}">
-          {{ task }}
+          {{ task.description }} for ${{ task.cost }}
         </a>
       </div>
     {% endfor %}
