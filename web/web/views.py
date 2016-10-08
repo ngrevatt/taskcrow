@@ -8,12 +8,11 @@ def categories_view(request):
     return render_to_response("app/categories.html", ctx)
 
 
-def category_task_list_view(request):
+def category_task_list_view(request, cid):
     payload = {
-        "id": requests.GET.get("id", None)
+        "id": cid,
     }
     r = requests.get("http://exp/CategoryTaskListPage", params=payload)
-    raise r.text
     ctx = r.json()
-    return render_to_response("app/categories.html", ctx)
+    return render_to_response("app/categories_task_list.html", ctx)
 
