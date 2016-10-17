@@ -3,7 +3,7 @@ from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-class UserProfile(models.Model):
+class User(models.Model):
     username = models.CharField(max_length=128)
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
@@ -16,14 +16,14 @@ class UserProfile(models.Model):
 
 
 class Customer(models.Model):
-    user = models.OneToOneField(UserProfile)
+    user = models.OneToOneField(User)
 
     def __str__(self):
         return str(self.user)
 
 
 class ServiceProvider(models.Model):
-    user = models.OneToOneField(UserProfile)
+    user = models.OneToOneField(User)
 
     @property
     def is_verified(self):

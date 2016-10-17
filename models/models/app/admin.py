@@ -3,7 +3,7 @@ from .models import *
 
 # Register your models here.
 
-admin.site.register(UserProfile)
+admin.site.register(User)
 admin.site.register(Customer)
 admin.site.register(ServiceProvider)
 admin.site.register(Verification)

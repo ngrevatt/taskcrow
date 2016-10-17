@@ -11,10 +11,10 @@ class ListAsDictMixin(object):
         return resp
 
 
-class UserProfileViewSet(ListAsDictMixin, viewsets.ModelViewSet):
+class UserViewSet(ListAsDictMixin, viewsets.ModelViewSet):
 
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class CustomerViewSet(ListAsDictMixin, viewsets.ModelViewSet):
