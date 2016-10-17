@@ -1,5 +1,7 @@
+from django.core import exceptions
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import hashers
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -15,6 +17,32 @@ class User(models.Model):
 
     def __str__(self):
         return self.username
+
+    def login(self, password):
+        token = None
+        if hashers.check_password(password, self.password):
+            token = AuthenticationToken.create_for_user(self)
+        return token
+
+    def logout(self, token):
+        try:
+            at = AuthenticationToken.get(user=self, token=tokeon)
+            at.delete()
+            return True
+        except exceptions.ObjectDoesNotExist:
+            return False
+
+
+class AuthenticationToken(models.Model):
+    user = models.ForeignKey(User)
+    token = models.CharField(max_length=64, primary_key=True)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    @classmethod
+    def create_for_user(cls, user):
+        token = hmac.new(key = settings.SECRET_KEY.encode("utf-8"),
+                         msg = os.urandom(32), digestmod = "sha256").hexdigest()
+        return AuthenticationToken.create(user=user, token=token)
 
 
 class Customer(models.Model):
