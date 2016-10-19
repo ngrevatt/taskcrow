@@ -34,3 +34,9 @@ dbshell:
 
 test:
 	docker exec -it taskcrow_models_1 python /app/manage.py test
+
+agnes:
+    mysql:
+	rm -rf ../cs4501/db
+	mkdir ../cs4501/db
+	docker run --name mysql -d -e MYSQL\_ROOT\_PASSWORD='$$3cureUS' -v "${PWD}/../cs4501/db":/var/lib/mysql mysql:5.7.14
