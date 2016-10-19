@@ -23,4 +23,5 @@ urlpatterns = [
         name='category_task_list_view'),
     url(r'^task/(?P<tid>\d+)$', views.task_detail_view,
         name='task_detail_view'),
+    url(r'^login$', views.login, name='LoginForm'),
 ]
