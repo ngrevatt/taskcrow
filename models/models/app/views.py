@@ -1,3 +1,6 @@
+from django.http import JsonResponse, HttpResponse
+from django.core import exceptions
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, filters
 from .serializers import *
 from .models import *
@@ -41,4 +44,30 @@ class TaskViewSet(ListAsDictMixin, viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     filter_fields = ("id", "category",)
+
+
+@csrf_exempt
+def login_view(request):
+    username = request.POST.get("username", "")
+    password = request.POST.get("password", "")
+    if username == "" or password == "":
+        return JsonResponse({
+            "error": "must pass username and password"
+        }, status=400)
+
+    login_failure = JsonResponse({
+        "error": "invalid username or password"
+    })
+    try:
+        user = User.objects.get(username=username)
+    except exceptions.ObjectDoesNotExist:
+        return login_failure
+
+    token = user.login(password)
+    if token is None:
+        return login_failure
+    return JsonResponse({
+        "token": token.token
+    })
+
 

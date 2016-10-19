@@ -1,3 +1,6 @@
+import os
+import hmac
+from django.conf import settings
 from django.core import exceptions
 from django.db import models
 from django.utils import timezone
@@ -42,7 +45,7 @@ class AuthenticationToken(models.Model):
     def create_for_user(cls, user):
         token = hmac.new(key = settings.SECRET_KEY.encode("utf-8"),
                          msg = os.urandom(32), digestmod = "sha256").hexdigest()
-        return AuthenticationToken.create(user=user, token=token)
+        return AuthenticationToken.objects.create(user=user, token=token)
 
 
 class Customer(models.Model):
