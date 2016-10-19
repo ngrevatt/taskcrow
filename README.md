@@ -1,5 +1,15 @@
 # taskcrow
 
+## Testing Notes
+
+Run `make mysql initmysql` to build and prepare mysql container. 
+
+Run `make upcompose` to build and run containers.
+
+Run `make tests` to run tests.
+
+See `Makefile` for all `make` commands. 
+
 ## Project 3 Notes
 
 User stories are [here](user_stories.md).
