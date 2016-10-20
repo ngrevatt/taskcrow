@@ -18,7 +18,7 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'/^$', views.categories_view, name='categories_view'),
+    url(r'^$', views.categories_view, name='categories_view'),
     url(r'^category/(?P<cid>\d+)$', views.category_task_list_view,
         name='category_task_list_view'),
     url(r'^task/(?P<tid>\d+)/$', views.task_detail_view,
