@@ -85,3 +85,21 @@ class LogoutView(views.APIView):
         })
 
 
+class AuthenticatedUserView(views.APIView):
+    def get(self, request):
+        token = request.META.get("HTTP_AUTH", "")
+        if token == "":
+            return JsonResponse({
+                "error": "no token provided",
+            }, status=400)
+
+        try:
+            auth_token = AuthenticationToken.objects.get(token=token)
+        except exceptions.ObjectDoesNotExist:
+            return JsonResponse({
+                "error": "no user for given authentication token"
+            }, status=404)
+
+        return JsonResponse({
+            "user": UserSerializer(auth_token.user).data,
+        })
