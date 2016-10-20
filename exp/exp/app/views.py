@@ -4,16 +4,17 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+def get_authenticated_user(request):
+    token = request.headers.get("auth", "")
+    ru = requests.get("http://models/api/v1/authenticated_user/", header={"auth":token})
+    return ru.json()
 
 class CategoriesPage(APIView):
     def get(self, request):
-        token = request.headers.get("auth", "")
-        ru = None
-
         rc = requests.get("http://models/api/v1/category/")
         return Response({
             "categories": rc.json()["records"],
-            "user": ru.json(),
+            "user": get_authenticated_user(), 
         })
 
 class CategoryTaskListPage(APIView):
@@ -27,6 +28,7 @@ class CategoryTaskListPage(APIView):
         return Response({
             "category": cr.json(),
             "tasks": tr.json()["records"],
+            "user": get_authenticated_user(), 
         })
 
 class TaskDetailPage(APIView):
@@ -35,6 +37,7 @@ class TaskDetailPage(APIView):
         r = requests.get("http://models/api/v1/task/{}".format(tid))
         return Response({
             "task": r.json(),
+            "user": get_authenticated_user(), 
         })
 
 class SignUpPage(APIView):
@@ -46,7 +49,10 @@ class SignUpPage(APIView):
 class CreateTaskPage(APIView):
     def post(self, request):
         r = requests.post("http://models/api/v1/task/", data=request.POST)
-        return Response(r.json(), status=r.status_code)
+        return Response({
+            "task": r.json(), 
+            "user": get_authenticated_user(), 
+        },  status=r.status_code)
 
 
 class LoginPage(APIView):
