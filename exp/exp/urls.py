@@ -17,6 +17,7 @@ from .app.views import *
 
 urlpatterns = [
     url(r"^SignUpPage$", SignUpPage.as_view()),
+    url(r"^CreateTaskPage$", CreateTaskPage.as_view()),
     url(r"^LoginPage$", LoginPage.as_view()),
     url(r"^LogoutPage$", LogoutPage.as_view()),
     url(r"^CategoriesPage$", CategoriesPage.as_view()),
