@@ -33,6 +33,8 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^api/v1/login/$', views.LoginView.as_view(), name='login_view'),
     url(r'^api/v1/logout/$', views.LogoutView.as_view(), name='logout_view'),
+    url(r'^api/v1/authenticated_user/$', views.AuthenticatedUserView.as_view(),
+        name='authenticated_user_view'),
     url(r'^api/v1/', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/', include('rest_framework.urls',
