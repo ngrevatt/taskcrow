@@ -15,7 +15,6 @@ class ListAsDictMixin(object):
 
 
 class UserViewSet(ListAsDictMixin, viewsets.ModelViewSet):
-
     queryset = User.objects.all()
     serializer_class = UserSerializer
 

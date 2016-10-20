@@ -7,9 +7,13 @@ from rest_framework.response import Response
 
 class CategoriesPage(APIView):
     def get(self, request):
-        r = requests.get("http://models/api/v1/category/")
+        token = request.headers.get("auth", "")
+        ru = None
+
+        rc = requests.get("http://models/api/v1/category/")
         return Response({
-            "categories": r.json()["records"]
+            "categories": rc.json()["records"],
+            "user": ru.json(),
         })
 
 class CategoryTaskListPage(APIView):
