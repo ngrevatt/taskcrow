@@ -1,4 +1,5 @@
 import requests
+import json
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -32,13 +33,23 @@ class TaskDetailPage(APIView):
             "task": r.json(),
         })
 
+class SignUpPage(APIView):
+    def post(self, request):
+        payload = json.dumps({})
+        sr = requests.post("http://models/api/v1/user/", data=payload)
+
+        return Response(
+            sr.json()
+        )
+
+
 class LoginPage(APIView):
     def post(self, request):
         user = request.POST.get("username", "")
         password = request.POST.get("password", "")
         payload = {"username": user, "password": password}
 
-        ar = requests.post("http://models/api/v1/login", data=payload)
+        ar = requests.post("http://models/api/v1/login/", data=payload)
 
         return Response(
             ar.json(),
@@ -49,7 +60,7 @@ class LogoutPage(APIView):
         token = request.POST.get("token", "")
         payload = {"token": token}
             
-        lr = requests.post("http://models/api/v1/logout", data=payload)
+        lr = requests.post("http://models/api/v1/logout/", data=payload)
 
         return Response(
             lr.json(),
