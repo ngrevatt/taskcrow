@@ -35,12 +35,9 @@ class TaskDetailPage(APIView):
 
 class SignUpPage(APIView):
     def post(self, request):
-        payload = json.dumps({})
-        sr = requests.post("http://models/api/v1/user/", data=payload)
+        sr = requests.post("http://models/api/v1/user/", data=request.POST)
 
-        return Response(
-            sr.json()
-        )
+        return Response(sr.json(), status=sr.status_code)
 
 
 class LoginPage(APIView):
@@ -51,19 +48,15 @@ class LoginPage(APIView):
 
         ar = requests.post("http://models/api/v1/login/", data=payload)
 
-        return Response(
-            ar.json(),
-        )
+        return Response(ar.json(), status=ar.status_code)
 
 class LogoutPage(APIView):
     def post(self, request):
         token = request.POST.get("token", "")
         payload = {"token": token}
-            
+
         lr = requests.post("http://models/api/v1/logout/", data=payload)
 
-        return Response(
-            lr.json(),
-        )
+        return Response(lr.json(), status=lr.status_code)
 
 
