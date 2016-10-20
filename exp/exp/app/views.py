@@ -32,3 +32,15 @@ class TaskDetailPage(APIView):
             "task": r.json(),
         })
 
+class LoginPage(APIView):
+    def post(self, request):
+        uid = request.GET.get("username", -1)
+        pid = request.GET.get("password", -1)
+        payload = {"username": uid, "password": pid}
+
+        ar = requests.post("http://models/api/v1/login/", data=payload)
+
+        return Response({
+            "authentication": ar.json(),
+        })
+            
