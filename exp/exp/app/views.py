@@ -34,13 +34,25 @@ class TaskDetailPage(APIView):
 
 class LoginPage(APIView):
     def post(self, request):
-        uid = request.GET.get("username", -1)
-        pid = request.GET.get("password", -1)
-        payload = {"username": uid, "password": pid}
+        user = request.POST.get("username", "")
+        password = request.POST.get("password", "")
+        payload = {"username": user, "password": password}
 
-        ar = requests.post("http://models/api/v1/login/", data=payload)
+        ar = requests.post("http://models/api/v1/login", data=payload)
 
-        return Response({
-            "authentication": ar.json(),
-        })
+        return Response(
+            ar.json(),
+        )
+
+class LogoutPage(APIView):
+    def post(self, request):
+        token = request.POST.get("token", "")
+        payload = {"token": token}
             
+        lr = requests.post("http://models/api/v1/logout", data=payload)
+
+        return Response(
+            lr.json(),
+        )
+
+
