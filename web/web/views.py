@@ -79,13 +79,16 @@ def login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             post_data = {'username': username, 'password': password}
-            resp = requests.post('http://exp/login', data=post_data)
+            resp = requests.post('http://exp/LoginPage/', data=post_data)
             print(resp)
             if resp.status_code != 200:
                 return render(request, 'app/login.html')
-            authenticator = {'auth': resp['authenticator'], 'user_id': resp['user_id']}
-            response = HttpResponseRedirect('/profile')
-            response.set_cookie("auth", json.dumps(authenticator))
+            data = resp.json()
+            if "error" in data:
+                return render(request, 'app/login.html')
+            authenticator = data["token"]
+            response = HttpResponseRedirect('/')
+            response.set_cookie("auth", authenticator)
             return response
         else:
             print(form)
