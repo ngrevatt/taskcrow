@@ -25,6 +25,6 @@ urlpatterns = [
     url(r"^login/$", views.login_view, name="login_view"),
     url(r"^logout/$", views.logout_view, name="logout_view"),
     url(r"^signup/$", views.signup_view, name="signup_view"),
-    #url(r"^create_listing/$", views.create_listing_view,
-    #    name="create_listing_view"),
+    url(r"^create_listing/$", views.create_listing_view,
+        name="create_listing_view"),
 ]

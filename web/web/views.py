@@ -12,6 +12,9 @@ def auth_headers(request):
         "auth": request.COOKIES.get("auth", ""),
     }
 
+def request_successful(response):
+    return 200 <= response.status_code < 300
+
 
 def categories_view(request):
     r = requests.get("http://exp/CategoriesPage/",
@@ -49,19 +52,22 @@ def signup_view(request):
             username = account_form.cleaned_data['username']
             password = account_form.cleaned_data['password']
             email = account_form.cleaned_data['email']
-            phone_number = account_form.cleaned_data['phone_number']
+            phone_number = account_form.cleaned_data['phone_number'].as_international
             post_data = {'username': username, 'password': password, 'first_name': first_name, 'last_name': last_name,
                          'email': email, 'phone_number': phone_number}
-            resp = requests.post('http://exp/SignUpPage/', data = post_data)
-            if resp.status_code != 200:
-                return render(request, 'app/createuser.html')
+            resp = requests.post('http://exp/SignUpPage/', data=post_data)
+            if not request_successful(resp):
+                return render(request, 'app/createuser.html', {"account_form": account_form})
+
             data = resp.json()
             if "error" in data:
-                return render(request, 'app/createuser.html')
+                ctx = {
+                    "account_form": account_form,
+                    "error": data["error"],
+                }
+                return render(request, 'app/createuser.html', ctx)
             response = redirect("main_view")
             return response
-        else:
-            print(account_form)
     else:
         account_form = UserForm()
 
@@ -78,10 +84,10 @@ def login_view(request):
             r = requests.post("http://exp/LoginPage/", data=post_data,
                     headers=auth_headers(request))
 
-            if r.status_code != 200:
+            if not request_successful(r):
                 return render(request, "app/login.html", {"form": form})
-            data = r.json()
 
+            data = r.json()
             if "error" in data:
                 ctx = {
                     "form": form,
@@ -96,11 +102,12 @@ def login_view(request):
     else:
         form = LoginForm()
 
+
     r = requests.get("http://exp/LoginPage/", headers=auth_headers(request))
 
     ctx = {
             "form": form,
-            "user": r.json()["user"],
+            "user": r.json().get("user", None),
     }
 
     return render(request, "app/login.html", {"form": form})
@@ -112,7 +119,7 @@ def logout_view(request):
         "token": token
     }
     r = requests.post("http://exp/LogoutPage/", data=payload)
-    if r.status_code != 200:
+    if not request_successful(r):
         return HttpResponse("Error logging out", status=500)
 
     response = redirect("main_view")
@@ -120,35 +127,38 @@ def logout_view(request):
     return response
 
 
-def createListing(request):
-    pass
+def create_listing_view(request):
     auth = request.COOKIES.get("auth")
     if not auth:
-        return HttpResponseRedirect('/')
-    if request.method == 'GET':
-        return render(request, 'app/createlistin.html')
+        return redirect("login_view")
     if request.method == 'POST':
         form = ListingForm(data=request.POST)
         if form.is_valid():
-            category = form.cleaned_data['category']
-            description = form.cleaned_data['description']
-            jsona = json.loads(auth)
-            post_data = {'category': category, 'description': description, 'creator': jsona['user_id'],
-                         'available': True}
-            resp = requests.post('http:/exp/CreateTaskPage/', data=post_data)
-            if resp.status_code != 200:
-                return render(request, 'app/createlistin.html')
+            resp = requests.post('http://exp/CreateTaskPage/', data=form.cleaned_data,
+                    headers=auth_headers(request))
+            if not request_successful(resp):
+                return render(request, 'app/createlisting.html', {"form": form, "error": resp.text})
+
             data = resp.json()
             if "error" in data:
-                return render(request, 'app/createlistin.html')
-            authenticator = data["token"]
-            response = HttpResponseRedirect('/')
-            return response
-        else:
-            print(form)
+                return render(request, 'app/createlisting.html')
+            return redirect("main_view")
     else:
         form = ListingForm()
 
-    return render(request, 'app/createlistin.html', {'form': form})
+    r = requests.get("http://exp/CreateTaskPage/", headers=auth_headers(request))
+
+    data = r.json()
+    user = data.get("user", None)
+    if not user:
+        return redirect("login_view")
+
+    ctx = {
+            "form": form,
+            "user": user,
+            "categories": data["categories"]
+    }
+
+    return render(request, 'app/createlisting.html', ctx)
 
 

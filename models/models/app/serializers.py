@@ -8,12 +8,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
 
 
-class CustomerSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Customer
-
-
 class ServiceProviderSerializer(serializers.ModelSerializer):
 
     class Meta:

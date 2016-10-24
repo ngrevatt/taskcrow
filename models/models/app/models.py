@@ -35,6 +35,10 @@ class User(models.Model):
         except exceptions.ObjectDoesNotExist:
             return False
 
+    # Required for Django Rest Framework
+    def is_authenticated(self):
+        return True
+
 
 class AuthenticationToken(models.Model):
     user = models.ForeignKey(User)
@@ -46,13 +50,6 @@ class AuthenticationToken(models.Model):
         token = hmac.new(key = settings.SECRET_KEY.encode("utf-8"),
                          msg = os.urandom(32), digestmod = "sha256").hexdigest()
         return AuthenticationToken.objects.create(user=user, token=token)
-
-
-class Customer(models.Model):
-    user = models.OneToOneField(User)
-
-    def __str__(self):
-        return str(self.user)
 
 
 class ServiceProvider(models.Model):
@@ -86,7 +83,7 @@ class Category(models.Model):
 
 
 class Task(models.Model):
-    customer = models.ForeignKey(Customer)
+    customer = models.ForeignKey(User)
     category = models.ForeignKey(Category)
     description = models.TextField()
     cost = models.IntegerField()

@@ -10,10 +10,15 @@ def get_authenticated_user(request):
             headers={"auth": token})
     j = ru.json()
     if "error" in j:
-        return None
+        return j
     else:
         return j["user"]
 
+
+def auth_headers(request):
+    return {
+        "auth": request.META.get("HTTP_AUTH", ""),
+    }
 
 class CategoriesPage(APIView):
     def get(self, request):
@@ -48,16 +53,31 @@ class TaskDetailPage(APIView):
 
 class SignUpPage(APIView):
     def post(self, request):
-        sr = requests.post("http://models/api/v1/user/", data=request.POST)
+        sr = requests.post("http://models/api/v1/signup/", data=request.POST)
         return Response(sr.json(), status=sr.status_code)
 
 
 class CreateTaskPage(APIView):
-    def post(self, request):
-        r = requests.post("http://models/api/v1/task/", data=request.POST)
+    def get(self, request):
+        r = requests.get("http://models/api/v1/category/")
         return Response({
-            "task": r.json(),
             "user": get_authenticated_user(request),
+            "categories": r.json()["records"],
+        })
+
+    def post(self, request):
+        user = get_authenticated_user(request)
+        payload = {
+            "customer": user["id"],
+            "due_date": request.POST.get("due_date", ""),
+            "description": request.POST.get("description", ""),
+            "cost": request.POST.get("cost", ""),
+        }
+
+        r = requests.post("http://models/api/v1/task/", data=payload, headers=auth_headers(request))
+        return Response({
+            "task": payload,
+            "user": user,
         },  status=r.status_code)
 
 

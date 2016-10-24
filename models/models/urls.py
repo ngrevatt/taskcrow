@@ -22,7 +22,6 @@ from .app import views
 
 router = routers.DefaultRouter()
 router.register(r'user', views.UserViewSet)
-router.register(r'customer', views.CustomerViewSet)
 router.register(r'service_provider', views.ServiceProviderViewSet)
 router.register(r'verification', views.VerificationViewSet)
 router.register(r'category', views.CategoryViewSet)
@@ -33,6 +32,7 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^api/v1/login/$', views.LoginView.as_view(), name='login_view'),
     url(r'^api/v1/logout/$', views.LogoutView.as_view(), name='logout_view'),
+    url(r'^api/v1/signup/$', views.SignupView.as_view(), name='signup_view'),
     url(r'^api/v1/authenticated_user/$', views.AuthenticatedUserView.as_view(),
         name='authenticated_user_view'),
     url(r'^api/v1/', include(router.urls)),

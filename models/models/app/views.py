@@ -2,6 +2,7 @@ from django.http import JsonResponse, HttpResponse
 from django.core import exceptions
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, filters, views
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .serializers import *
 from .models import *
 
@@ -17,11 +18,6 @@ class ListAsDictMixin(object):
 class UserViewSet(ListAsDictMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-class CustomerViewSet(ListAsDictMixin, viewsets.ModelViewSet):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
 
 
 class ServiceProviderViewSet(ListAsDictMixin, viewsets.ModelViewSet):
@@ -43,6 +39,7 @@ class TaskViewSet(ListAsDictMixin, viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     filter_fields = ("id", "category",)
+    #permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class LoginView(views.APIView):
@@ -83,6 +80,22 @@ class LogoutView(views.APIView):
         return JsonResponse({
             "status": "OK"
         })
+
+class SignupView(views.APIView):
+    def post(self, request):
+        p = request.POST
+        User.objects.create(
+            username=p["username"],
+            password=hashers.make_password(p["password"]),
+            first_name=p["first_name"],
+            last_name=p["last_name"],
+            email=p["email"],
+            phone_number=p["phone_number"],
+        )
+
+        return JsonResponse({
+            "status": "CREATED"
+        }, status=201)
 
 
 class AuthenticatedUserView(views.APIView):
