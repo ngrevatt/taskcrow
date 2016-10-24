@@ -7,12 +7,15 @@ from .forms import UserForm
 from .forms import ListingForm
 
 
-def add_auth_header(exp_request, web_request):
-    exp_request.headers["auth"] = web_request.COOKIES.get("auth", "")
+def auth_headers(request):
+    return {
+        "auth": request.COOKIES.get("auth", ""),
+    }
+
 
 def categories_view(request):
-    r = requests.get("http://exp/CategoriesPage")
-    add_auth_header(r, request)
+    r = requests.get("http://exp/CategoriesPage/",
+            headers=auth_headers(request))
     ctx = r.json()
     return render(request, "app/categories.html", ctx)
 
@@ -21,8 +24,8 @@ def category_task_list_view(request, cid):
     payload = {
         "category": cid,
     }
-    r = requests.get("http://exp/CategoryTaskListPage", params=payload)
-    add_auth_header(r, request)
+    r = requests.get("http://exp/CategoryTaskListPage/", params=payload,
+            headers=auth_headers(request))
     ctx = r.json()
     return render(request, "app/category_task_list.html", ctx)
 
@@ -31,8 +34,8 @@ def task_detail_view(request, tid):
     payload = {
         "task": tid,
     }
-    r = requests.get("http://exp/TaskDetailPage", params=payload)
-    add_auth_header(r, request)
+    r = requests.get("http://exp/TaskDetailPage/", params=payload,
+            headers=auth_headers(request))
     ctx = r.json()
     return render(request, "app/task_detail.html", ctx)
 
@@ -71,10 +74,14 @@ def login_view(request):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
             post_data = {"username": username, "password": password}
-            resp = requests.post("http://exp/LoginPage/", data=post_data)
-            if resp.status_code != 200:
+
+            r = requests.post("http://exp/LoginPage/", data=post_data,
+                    headers=auth_headers(request))
+
+            if r.status_code != 200:
                 return render(request, "app/login.html", {"form": form})
-            data = resp.json()
+            data = r.json()
+
             if "error" in data:
                 ctx = {
                     "form": form,
@@ -88,6 +95,13 @@ def login_view(request):
             return response
     else:
         form = LoginForm()
+
+    r = requests.get("http://exp/LoginPage/", headers=auth_headers(request))
+
+    ctx = {
+            "form": form,
+            "user": r.json()["user"],
+    }
 
     return render(request, "app/login.html", {"form": form})
 

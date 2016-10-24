@@ -8,7 +8,12 @@ def get_authenticated_user(request):
     token = request.META.get("HTTP_AUTH", "")
     ru = requests.get("http://models/api/v1/authenticated_user/",
             headers={"auth": token})
-    return ru.json()
+    j = ru.json()
+    if "error" in j:
+        return None
+    else:
+        return j["user"]
+
 
 class CategoriesPage(APIView):
     def get(self, request):
@@ -57,6 +62,11 @@ class CreateTaskPage(APIView):
 
 
 class LoginPage(APIView):
+    def get(self, request):
+        return Response({
+            "user": get_authenticated_user(request),
+        })
+
     def post(self, request):
         user = request.POST.get("username", "")
         password = request.POST.get("password", "")
