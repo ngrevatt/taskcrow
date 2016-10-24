@@ -5,8 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 def get_authenticated_user(request):
-    token = request.headers.get("auth", "")
-    ru = requests.get("http://models/api/v1/authenticated_user/", header={"auth":token})
+    token = request.META.get("HTTP_AUTH", "")
+    ru = requests.get("http://models/api/v1/authenticated_user/",
+            headers={"auth": token})
     return ru.json()
 
 class CategoriesPage(APIView):
@@ -14,7 +15,7 @@ class CategoriesPage(APIView):
         rc = requests.get("http://models/api/v1/category/")
         return Response({
             "categories": rc.json()["records"],
-            "user": get_authenticated_user(), 
+            "user": get_authenticated_user(request),
         })
 
 class CategoryTaskListPage(APIView):
@@ -28,7 +29,7 @@ class CategoryTaskListPage(APIView):
         return Response({
             "category": cr.json(),
             "tasks": tr.json()["records"],
-            "user": get_authenticated_user(), 
+            "user": get_authenticated_user(request),
         })
 
 class TaskDetailPage(APIView):
@@ -37,7 +38,7 @@ class TaskDetailPage(APIView):
         r = requests.get("http://models/api/v1/task/{}".format(tid))
         return Response({
             "task": r.json(),
-            "user": get_authenticated_user(), 
+            "user": get_authenticated_user(request),
         })
 
 class SignUpPage(APIView):
@@ -50,8 +51,8 @@ class CreateTaskPage(APIView):
     def post(self, request):
         r = requests.post("http://models/api/v1/task/", data=request.POST)
         return Response({
-            "task": r.json(), 
-            "user": get_authenticated_user(), 
+            "task": r.json(),
+            "user": get_authenticated_user(request),
         },  status=r.status_code)
 
 
