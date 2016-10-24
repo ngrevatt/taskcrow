@@ -1,4 +1,15 @@
-{% extends "base.html" %}
+{% extends "app/base.html" %}
+
+{% block styles %}
+{{ block.super }}
+<style>
+ul.errorlist {
+  width: 170px;
+  margin: auto;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
 
@@ -7,12 +18,17 @@
             <div class = "jumbotron">
                  <h2>Create User Page </h2>
                  <p class="lead"></p>
-            <form style="padding-top:5%;" id="account_form" method="POST" action="/create_user/" enctype="multipart/form-data">
-                {% csrf_token %}
-                     {{ account_form.as_p }}
-
-                <input class = "btn btn-primary btn-md" type="submit" name="submit" value="Register" />
-            </form>
+                 <form style="padding-top:5%;" id="account_form" method="POST" action="{% url 'signup_view' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in account_form %}
+                      <div>
+                        {{ field.label_tag }} {{ field }}
+                        {{ field.errors }}
+                      </div>
+                    {% endfor %}
+                    {{ error|capfirst }}<br/>
+                    <input class = "btn btn-primary btn-md" type="submit" name="submit" value="Register" />
+                </form>
             </div>
         </div>
     <!-- /.row -->
