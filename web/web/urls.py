@@ -17,7 +17,6 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-    url(r"^admin/", include(admin.site.urls)),
     url(r"^$", views.categories_view, name="main_view"),
     url(r"^category/(?P<cid>\d+)$", views.category_task_list_view,
         name="category_task_list_view"),
