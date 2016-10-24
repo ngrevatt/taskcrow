@@ -41,29 +41,31 @@ def task_detail_view(request, tid):
 
 
 def signup_view(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         account_form = UserForm(request.POST)
         if account_form.is_valid():
-            first_name = account_form.cleaned_data["first_name"]
-            last_name = account_form.cleaned_data["last_name"]
-            username = account_form.cleaned_data["username"]
-            password = account_form.cleaned_data["password"]
-            email = account_form.cleaned_data["email"]
-            phone_number = account_form.cleaned_data["phone_number"]
-            post_data = {"username": username, "password": password, "first_name": first_name, "last_name": last_name,
-                         "email": email, "phone_number": phone_number}
-            post_encoded = urllib.parse.urlencode(post_data).encode("utf-8")
-            req = urllib.request.Request("http://exp/createuser", data=post_encoded, method="POST")
-            resp_json = urllib.request.urlopen(req).read().decode("utf-8")
-            resp = json.loads(resp_json)
-            return render(request, "home.html")
-
+            first_name = account_form.cleaned_data['first_name']
+            last_name = account_form.cleaned_data['last_name']
+            username = account_form.cleaned_data['username']
+            password = account_form.cleaned_data['password']
+            email = account_form.cleaned_data['email']
+            phone_number = account_form.cleaned_data['phone_number']
+            post_data = {'username': username, 'password': password, 'first_name': first_name, 'last_name': last_name,
+                         'email': email, 'phone_number': phone_number}
+            resp = requests.post('http://exp/SignUpPage/', data = post_data)
+            if resp.status_code != 200:
+                return render(request, 'app/createuser.html')
+            data = resp.json()
+            if "error" in data:
+                return render(request, 'app/createuser.html')
+            response = redirect("main_view")
+            return response
         else:
-            print(account_form.errors)
+            print(account_form)
     else:
         account_form = UserForm()
 
-    return render(request, "createUser.html", {"account_form": account_form})
+    return render(request, 'app/createuser.html', {'account_form': account_form})
 
 def login_view(request):
     if request.method == "POST":
@@ -120,30 +122,33 @@ def logout_view(request):
 
 def createListing(request):
     pass
-#	form = ListingForm()
-#	auth = request.COOKIES.get("auth")
-#	if not auth:
-#		return HttpResponseRedirect("/home")
-#	if request.method == "POST":
-#		form = ListingForm(data=request.POST)
-#		if form.is_valid():
-#			title=form.cleaned_data["title"]
-#			description=form.cleaned_data["description"]
-#			jsona = json.loads(auth)
-#			post_data = {"title": title, "description": description, "creator": jsona["user_id"], "available": True, "u_id": jsona["user_id"]}
-#			post_encoded = urllib.parse.urlencode(post_data).encode("utf-8")
-#			req = urllib.request.Request("http:/exp/createlisting", data=post_encoded, method="POST")
-#			expire_view_cache(request, "home")
-#			resp_json = urllib.request.urlopen(req).read().decode("utf-8")
-#			resp = json.loads(resp_json)
-#			response = HttpResponseRedirect("app/create_listing_success/")
-#			return response
-#		else:
-#			print(form.errors)
-#
-#	if request.method == "GET":
-#    	    return render(request, "app/createlistin.html", {"form": form})
-#    #f = ListingForm(request.POST)
-#	return render(request, "app/create_listing_success.html")
+    auth = request.COOKIES.get("auth")
+    if not auth:
+        return HttpResponseRedirect('/')
+    if request.method == 'GET':
+        return render(request, 'app/createlistin.html')
+    if request.method == 'POST':
+        form = ListingForm(data=request.POST)
+        if form.is_valid():
+            category = form.cleaned_data['category']
+            description = form.cleaned_data['description']
+            jsona = json.loads(auth)
+            post_data = {'category': category, 'description': description, 'creator': jsona['user_id'],
+                         'available': True}
+            resp = requests.post('http:/exp/CreateTaskPage/', data=post_data)
+            if resp.status_code != 200:
+                return render(request, 'app/createlistin.html')
+            data = resp.json()
+            if "error" in data:
+                return render(request, 'app/createlistin.html')
+            authenticator = data["token"]
+            response = HttpResponseRedirect('/')
+            return response
+        else:
+            print(form)
+    else:
+        form = ListingForm()
+
+    return render(request, 'app/createlistin.html', {'form': form})
 
 
