@@ -4,6 +4,7 @@ from .models import *
 class ModelsTestCase(TestCase):
     fixtures = ["fixtures.json"]
 
+
     def test_user_list(self):
         got = self.client.get("/api/v1/user/").data
         want = {
@@ -30,6 +31,7 @@ class ModelsTestCase(TestCase):
         }
         self.assertEquals(got, want)
 
+
     def test_user_detail(self):
         got = self.client.get("/api/v1/user/1/").data
         want = {
@@ -48,6 +50,7 @@ class ModelsTestCase(TestCase):
             "detail": "Not found.",
         }
         self.assertEqual(got, want)
+
 
     def test_user_create(self):
         payload = {
@@ -97,6 +100,7 @@ class ModelsTestCase(TestCase):
         }
         self.assertEquals(got, want)
 
+
     def test_category_detail(self):
         got = self.client.get("/api/v1/category/1/").data
         want = {
@@ -110,6 +114,7 @@ class ModelsTestCase(TestCase):
             "detail": "Not found.",
         }
         self.assertEqual(got, want)
+
 
     def test_task_list(self):
         got = self.client.get("/api/v1/task/").data
@@ -139,6 +144,7 @@ class ModelsTestCase(TestCase):
         }
         self.assertEquals(got, want)
 
+
     def test_task_detail(self):
         got = self.client.get("/api/v1/task/1/").data
         want = {
@@ -159,6 +165,41 @@ class ModelsTestCase(TestCase):
         }
         self.assertEqual(got, want)
 
+
+    def test_task_create(self):
+        payload = {
+            "description": "Bleach the fence",
+            "cost": 150,
+            "created_date": "2016-09-15T17:02:00Z",
+            "due_date": "2016-09-23T05:02:00Z",
+            "complete": Fasle,
+            "customer": 1,
+            "category": 1,
+        }
+        got = self.client.post("/api/v1/task/", payload).data
+        want = payload
+        want["id"] = 3
+        self.assertEquals(got, want)
+
+        got = self.client.get("/api/v1/task/3/").data
+        self.assertEquals(got, want)
+
+
+        payload = {
+            "description": "Bleach the fence",
+            "cost": 150,
+            "created_date": "2016-09-15T17:02:00Z",
+            "due_date": "2016-09-23T05:02:00Z",
+        }
+        got = self.client.post("/api/v1/task/", payload).data
+        want = {
+            "complete": ["This field is required."],
+            "customer": ["This field is required."],
+            "category": ["This field is required."],
+        }
+        self.assertEqual(got, want)
+
+
     def test_service_provider_list(self):
         got = self.client.get("/api/v1/service_provider/").data
         want = {
@@ -170,6 +211,7 @@ class ModelsTestCase(TestCase):
             ]
         }
         self.assertEqual(got, want)
+
 
     def test_service_provider_detail(self):
         got = self.client.get("/api/v1/service_provider/1/").data
@@ -185,6 +227,7 @@ class ModelsTestCase(TestCase):
         }
         self.assertEqual(got, want)
 
+
     def test_verification_list(self):
         got = self.client.get("/api/v1/verification/").data
         want = {
@@ -198,6 +241,7 @@ class ModelsTestCase(TestCase):
             ]
         }
         self.assertEqual(got, want)
+
 
     def test_verification_detail(self):
         got = self.client.get("/api/v1/verification/1/").data
