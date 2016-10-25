@@ -49,6 +49,38 @@ class ModelsTestCase(TestCase):
         }
         self.assertEqual(got, want)
 
+    def test_user_create(self):
+        payload = {
+            "username": "newuser",
+            "password": "pbkdf2_sha256$20000$WnhvNVLfaG86$Rn0zycYpO4sK2p9RfyxvJ3Q10VF5+6qcUxzjC7JFR2I=",
+            "first_name": "Hello",
+            "last_name": "World",
+            "email": "hello@email.com",
+            "phone_number": "+41524204242"
+        }
+        got = self.client.post("/api/v1/user/", payload).data
+        want = payload
+        want["id"] = 3
+        self.assertEquals(got, want)
+
+        got = self.client.get("/api/v1/user/3/").data
+        self.assertEquals(got, want)
+
+
+        payload = {
+            "username": "newuser",
+            "email": "hello@email.com",
+            "phone_number": "+41524204242"
+        }
+        got = self.client.post("/api/v1/user/", payload).data
+        want = {
+            "password": ["This field is required."],
+            "first_name": ["This field is required."],
+            "last_name": ["This field is required."],
+        }
+        self.assertEqual(got, want)
+
+
     def test_category_list(self):
         got = self.client.get("/api/v1/category/").data
         want = {
