@@ -1,4 +1,6 @@
+import json
 from django.test import TestCase, Client
+from django.contrib.auth import hashers
 from .models import *
 
 class ModelsTestCase(TestCase):
@@ -48,38 +50,6 @@ class ModelsTestCase(TestCase):
         got = self.client.get("/api/v1/user/10/").data
         want = {
             "detail": "Not found.",
-        }
-        self.assertEqual(got, want)
-
-
-    def test_user_create(self):
-        payload = {
-            "username": "newuser",
-            "password": "pbkdf2_sha256$20000$WnhvNVLfaG86$Rn0zycYpO4sK2p9RfyxvJ3Q10VF5+6qcUxzjC7JFR2I=",
-            "first_name": "Hello",
-            "last_name": "World",
-            "email": "hello@email.com",
-            "phone_number": "+41524204242"
-        }
-        got = self.client.post("/api/v1/user/", payload).data
-        want = payload
-        want["id"] = 3
-        self.assertEquals(got, want)
-
-        got = self.client.get("/api/v1/user/3/").data
-        self.assertEquals(got, want)
-
-
-        payload = {
-            "username": "newuser",
-            "email": "hello@email.com",
-            "phone_number": "+41524204242"
-        }
-        got = self.client.post("/api/v1/user/", payload).data
-        want = {
-            "password": ["This field is required."],
-            "first_name": ["This field is required."],
-            "last_name": ["This field is required."],
         }
         self.assertEqual(got, want)
 
@@ -172,7 +142,7 @@ class ModelsTestCase(TestCase):
             "cost": 150,
             "created_date": "2016-09-15T17:02:00Z",
             "due_date": "2016-09-23T05:02:00Z",
-            "complete": Fasle,
+            "complete": False,
             "customer": 1,
             "category": 1,
         }
@@ -183,21 +153,6 @@ class ModelsTestCase(TestCase):
 
         got = self.client.get("/api/v1/task/3/").data
         self.assertEquals(got, want)
-
-
-        payload = {
-            "description": "Bleach the fence",
-            "cost": 150,
-            "created_date": "2016-09-15T17:02:00Z",
-            "due_date": "2016-09-23T05:02:00Z",
-        }
-        got = self.client.post("/api/v1/task/", payload).data
-        want = {
-            "complete": ["This field is required."],
-            "customer": ["This field is required."],
-            "category": ["This field is required."],
-        }
-        self.assertEqual(got, want)
 
 
     def test_service_provider_list(self):
@@ -258,3 +213,69 @@ class ModelsTestCase(TestCase):
             "detail": "Not found.",
         }
         self.assertEqual(got, want)
+
+    def test_authentication_flow(self):
+        # Test signup
+        payload = {
+            "username": "newuser",
+            "password": "password",
+            "first_name": "Hello",
+            "last_name": "World",
+            "email": "hello@email.com",
+            "phone_number": "+41524204242"
+        }
+        resp = self.client.post("/api/v1/signup/", payload)
+        got = json.loads(resp.content.decode("utf-8"))
+        want = {
+            "status": "CREATED",
+        }
+        self.assertEquals(got, want)
+
+        payload["id"] = 3
+        got = self.client.get("/api/v1/user/3/").data
+        self.assertTrue(hashers.check_password("password", got["password"]))
+
+        del got["password"]
+        del payload["password"]
+        self.assertEquals(got, payload)
+
+        # Test invalid login
+        payload = {
+            "username": "newuser",
+            "password": "wrongpassword",
+        }
+        resp = self.client.post("/api/v1/login/", payload)
+        got = json.loads(resp.content.decode("utf-8"))
+        want = {
+            "error": "invalid username or password",
+        }
+        self.assertEquals(got, want)
+
+        # Test valid login
+        payload = {
+            "username": "newuser",
+            "password": "password",
+        }
+        resp = self.client.post("/api/v1/login/", payload)
+        got = json.loads(resp.content.decode("utf-8"))
+        self.assertTrue("token" in got)
+        token = got["token"]
+        self.assertEqual(
+            AuthenticationToken.objects.filter(token=token, user=3).count(),
+            1
+        )
+
+        # Test logout
+        payload = {
+            "token": token,
+        }
+        resp = self.client.post("/api/v1/logout/", payload)
+        got = json.loads(resp.content.decode("utf-8"))
+        want = {
+            "status": "OK",
+        }
+        self.assertEquals(got, want)
+        self.assertEqual(
+            AuthenticationToken.objects.filter(token=token, user=3).count(),
+            0
+        )
