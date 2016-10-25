@@ -137,12 +137,13 @@ def create_listing_view(request):
             resp = requests.post('http://exp/CreateTaskPage/', data=form.cleaned_data,
                     headers=auth_headers(request))
             if not request_successful(resp):
-                return render(request, 'app/createlisting.html', {"form": form, "error": resp.text})
+                return render(request, 'app/createlisting.html',
+                        {"form": form, "error": "There was an error creating this task"})
 
             data = resp.json()
             if "error" in data:
-                return render(request, 'app/createlisting.html')
-            return redirect("main_view")
+                return render(request, 'app/createlisting.html', {"form": form, "error": error})
+            return redirect("task_detail_view", data["task"]["id"])
     else:
         form = ListingForm()
 

@@ -10,9 +10,9 @@ def get_authenticated_user(request):
             headers={"auth": token})
     j = ru.json()
     if "error" in j:
-        return j
+        return None
     else:
-        return j["user"]
+        return j.get("user", None)
 
 
 def auth_headers(request):
@@ -46,8 +46,18 @@ class TaskDetailPage(APIView):
     def get(self, request):
         tid = request.GET.get("task", -1)
         r = requests.get("http://models/api/v1/task/{}".format(tid))
+        task = dict(r.json())
+
+        customer_id = task["customer"]
+        customer = requests.get("http://models/api/v1/user/{}".format(customer_id)).json()
+        task["customer"] = customer
+
+        category_id = task["category"]
+        category = requests.get("http://models/api/v1/category/{}".format(category_id)).json()
+        task["category"] = category
+
         return Response({
-            "task": r.json(),
+            "task": task,
             "user": get_authenticated_user(request),
         })
 
@@ -72,11 +82,12 @@ class CreateTaskPage(APIView):
             "due_date": request.POST.get("due_date", ""),
             "description": request.POST.get("description", ""),
             "cost": request.POST.get("cost", ""),
+            "category": request.POST.get("category", ""),
         }
 
         r = requests.post("http://models/api/v1/task/", data=payload, headers=auth_headers(request))
         return Response({
-            "task": payload,
+            "task": r.json(),
             "user": user,
         },  status=r.status_code)
 
