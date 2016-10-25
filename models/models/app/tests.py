@@ -4,13 +4,14 @@ from .models import *
 class ModelsTestCase(TestCase):
     fixtures = ["fixtures.json"]
 
-    def test_user_profile_list(self):
-        got = self.client.get("/api/v1/user_profile/").data
+    def test_user_list(self):
+        got = self.client.get("/api/v1/user/").data
         want = {
             "records": [
                 {
                     "id": 1,
                     "username": "bob",
+                    "password": "pbkdf2_sha256$20000$WnhvNVLfaG86$Rn0zycYpO4sK2p9RfyxvJ3Q10VF5+6qcUxzjC7JFR2I=",
                     "first_name": "Bob",
                     "last_name": "Jones",
                     "email": "bob@email.com",
@@ -19,6 +20,7 @@ class ModelsTestCase(TestCase):
                 {
                     "id": 2,
                     "username": "mary",
+                    "password": "pbkdf2_sha256$20000$WnhvNVLfaG86$Rn0zycYpO4sK2p9RfyxvJ3Q10VF5+6qcUxzjC7JFR2I=",
                     "first_name": "Mary",
                     "last_name": "Jones",
                     "email": "mary@email.com",
@@ -28,17 +30,24 @@ class ModelsTestCase(TestCase):
         }
         self.assertEquals(got, want)
 
-    def test_user_profile_detail(self):
-        got = self.client.get("/api/v1/user_profile/1/").data
+    def test_user_detail(self):
+        got = self.client.get("/api/v1/user/1/").data
         want = {
             "id": 1,
             "username": "bob",
+            "password": "pbkdf2_sha256$20000$WnhvNVLfaG86$Rn0zycYpO4sK2p9RfyxvJ3Q10VF5+6qcUxzjC7JFR2I=",
             "first_name": "Bob",
             "last_name": "Jones",
             "email": "bob@email.com",
             "phone_number": "+41524204242"
         }
         self.assertEquals(got, want)
+
+        got = self.client.get("/api/v1/user/10/").data
+        want = {
+            "detail": "Not found.",
+        }
+        self.assertEqual(got, want)
 
     def test_category_list(self):
         got = self.client.get("/api/v1/category/").data
@@ -64,6 +73,12 @@ class ModelsTestCase(TestCase):
         }
         self.assertEquals(got, want)
 
+        got = self.client.get("/api/v1/category/10/").data
+        want = {
+            "detail": "Not found.",
+        }
+        self.assertEqual(got, want)
+
     def test_task_list(self):
         got = self.client.get("/api/v1/task/").data
         want = {
@@ -75,21 +90,8 @@ class ModelsTestCase(TestCase):
                     "created_date": "2016-09-15T17:02:00Z",
                     "due_date": "2016-09-23T05:02:00Z",
                     "complete": False,
-                    "customer": {
-                        "id": 1,
-                        "user": {
-                            "id": 1,
-                            "username": "bob",
-                            "first_name": "Bob",
-                            "last_name": "Jones",
-                            "email": "bob@email.com",
-                            "phone_number": "+41524204242"
-                        }
-                    },
-                    "category": {
-                        "id": 1,
-                        "name": "Yard Work"
-                    }
+                    "customer": 1,
+                    "category": 1,
                 },
                 {
                     "id": 2,
@@ -98,21 +100,8 @@ class ModelsTestCase(TestCase):
                     "created_date": "2016-09-15T17:02:00Z",
                     "due_date": "2016-09-23T05:02:00Z",
                     "complete": False,
-                    "customer": {
-                        "id": 1,
-                        "user": {
-                            "id": 1,
-                            "username": "bob",
-                            "first_name": "Bob",
-                            "last_name": "Jones",
-                            "email": "bob@email.com",
-                            "phone_number": "+41524204242"
-                        }
-                    },
-                    "category": {
-                        "id": 2,
-                        "name": "Cleaning"
-                    }
+                    "customer": 1,
+                    "category": 2,
                 }
             ]
         }
@@ -127,47 +116,16 @@ class ModelsTestCase(TestCase):
             "created_date": "2016-09-15T17:02:00Z",
             "due_date": "2016-09-23T05:02:00Z",
             "complete": False,
-            "customer": {
-                "id": 1,
-                "user": {
-                    "id": 1,
-                    "username": "bob",
-                    "first_name": "Bob",
-                    "last_name": "Jones",
-                    "email": "bob@email.com",
-                    "phone_number": "+41524204242"
-                }
-            },
-            "category": {
-                "id": 1,
-                "name": "Yard Work"
-            }
+            "customer": 1,
+            "category": 1,
         }
         self.assertEquals(got, want)
 
-    def test_customer_list(self):
-        got = self.client.get("/api/v1/customer/").data
+        got = self.client.get("/api/v1/task/10/").data
         want = {
-            "records": [
-                {
-                    "id": 1,
-                    "user": 1
-                },
-                {
-                    "id": 2,
-                    "user": 2
-                },
-            ]
+            "detail": "Not found.",
         }
         self.assertEqual(got, want)
-
-    def test_customer_detail(self):
-        got = self.client.get("/api/v1/customer/1/").data
-        want = {
-            "id": 1,
-            "user": 1
-        }
-        self.assertEquals(got, want)
 
     def test_service_provider_list(self):
         got = self.client.get("/api/v1/service_provider/").data
@@ -186,6 +144,12 @@ class ModelsTestCase(TestCase):
         want = {
             "id": 1,
             "user": 2
+        }
+        self.assertEqual(got, want)
+
+        got = self.client.get("/api/v1/service_provider/10/").data
+        want = {
+            "detail": "Not found.",
         }
         self.assertEqual(got, want)
 
@@ -210,5 +174,11 @@ class ModelsTestCase(TestCase):
             "complete": True,
             "successful": True,
             "service_provider": 1
+        }
+        self.assertEqual(got, want)
+
+        got = self.client.get("/api/v1/verification/10/").data
+        want = {
+            "detail": "Not found.",
         }
         self.assertEqual(got, want)
