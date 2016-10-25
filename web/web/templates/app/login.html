@@ -6,15 +6,19 @@
 {% endblock style %}
 
 {% block content %}
-<form action="/login/" method="post">
-    {% csrf_token %}
-    {% for field in form %}
-      <div>
-        {{ field.label_tag }} {{ field }}
-        {{ field.errors }}
-      </div>
-    {% endfor %}
-    {{ error|capfirst }}<br/>
-    <input type="submit" value="Submit" />
-</form>
+<div class = "row">
+    <div class = "col-lg-12 text-center">
+        <form action="/login/" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+              <div>
+                {{ field.label_tag }} {{ field }}
+                {{ field.errors }}
+              </div>
+            {% endfor %}
+            {{ error|capfirst }}<br/>
+            <input type="submit" class="btn btn-primary btn-md" value="Submit" />
+        </form>
+    </div>
+</div>
 {% endblock content %}
