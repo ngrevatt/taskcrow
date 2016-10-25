@@ -16,11 +16,11 @@ from django.conf.urls import include, url
 from .app.views import *
 
 urlpatterns = [
-    url(r"^SignUpPage/$", SignUpPage.as_view()),
-    url(r"^CreateTaskPage/$", CreateTaskPage.as_view()),
-    url(r"^LoginPage/$", LoginPage.as_view()),
-    url(r"^LogoutPage/$", LogoutPage.as_view()),
-    url(r"^CategoriesPage/$", CategoriesPage.as_view()),
-    url(r"^CategoryTaskListPage/$", CategoryTaskListPage.as_view()),
-    url(r"^TaskDetailPage/$", TaskDetailPage.as_view()),
+    url(r"^api/v1/SignUpPage/$", SignUpPage.as_view()),
+    url(r"^api/v1/CreateTaskPage/$", CreateTaskPage.as_view()),
+    url(r"^api/v1/LoginPage/$", LoginPage.as_view()),
+    url(r"^api/v1/LogoutPage/$", LogoutPage.as_view()),
+    url(r"^api/v1/CategoriesPage/$", CategoriesPage.as_view()),
+    url(r"^api/v1/CategoryTaskListPage/$", CategoryTaskListPage.as_view()),
+    url(r"^api/v1/TaskDetailPage/$", TaskDetailPage.as_view()),
 ]

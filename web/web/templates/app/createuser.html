@@ -16,9 +16,8 @@ ul.errorlist {
     <div class = "row">
         <div class = "col-lg-12 text-center">
             <div class = "jumbotron">
-                 <h2>Create User Page </h2>
+                 <h2>Signup</h2>
                  <p class="lead"></p>
-                 resp: {{ resp }}
                  <form style="padding-top:5%;" id="account_form" method="POST" action="{% url 'signup_view' %}">
                     {% csrf_token %}
                     {% for field in account_form %}

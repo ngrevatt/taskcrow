@@ -1,9 +1,13 @@
 {% extends "app/base.html" %}
 
-{% block style %}
+{% block styles %}
+  {{ block.super }}
   <style>
+    #create-listing {
+      margin-top: 3em;
+    }
   </style>
-{% endblock style %}
+{% endblock styles %}
 
 {% block content %}
 <div class="container">
@@ -18,6 +22,11 @@
         <a href="{% url 'category_task_list_view' category.id %}" class="task">{{ category.name }}</a>
       </div>
     {% endfor %}
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <a class="btn btn-primary" id="create-listing" href="{% url 'create_listing_view' %}" role="button">Create Listing</a>
+    </div>
   </div>
 </div>
 {% endblock content %}
