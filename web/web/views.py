@@ -17,7 +17,7 @@ def request_successful(response):
 
 
 def categories_view(request):
-    r = requests.get("http://exp/CategoriesPage/",
+    r = requests.get("http://exp/api/v1/CategoriesPage/",
             headers=auth_headers(request))
     ctx = r.json()
     return render(request, "app/categories.html", ctx)
@@ -27,7 +27,7 @@ def category_task_list_view(request, cid):
     payload = {
         "category": cid,
     }
-    r = requests.get("http://exp/CategoryTaskListPage/", params=payload,
+    r = requests.get("http://exp/api/v1/CategoryTaskListPage/", params=payload,
             headers=auth_headers(request))
     ctx = r.json()
     return render(request, "app/category_task_list.html", ctx)
@@ -37,7 +37,7 @@ def task_detail_view(request, tid):
     payload = {
         "task": tid,
     }
-    r = requests.get("http://exp/TaskDetailPage/", params=payload,
+    r = requests.get("http://exp/api/v1/TaskDetailPage/", params=payload,
             headers=auth_headers(request))
     ctx = r.json()
     return render(request, "app/task_detail.html", ctx)
@@ -55,7 +55,7 @@ def signup_view(request):
             phone_number = account_form.cleaned_data['phone_number'].as_international
             post_data = {'username': username, 'password': password, 'first_name': first_name, 'last_name': last_name,
                          'email': email, 'phone_number': phone_number}
-            resp = requests.post('http://exp/SignUpPage/', data=post_data)
+            resp = requests.post('http://exp/api/v1/SignUpPage/', data=post_data)
             if not request_successful(resp):
                 return render(request, 'app/createuser.html', {"account_form": account_form})
 
@@ -66,7 +66,7 @@ def signup_view(request):
                     "error": data["error"],
                 }
                 return render(request, 'app/createuser.html', ctx)
-            response = redirect("main_view")
+            response = redirect("logout_view")
             return response
     else:
         account_form = UserForm()
@@ -81,7 +81,7 @@ def login_view(request):
             password = form.cleaned_data["password"]
             post_data = {"username": username, "password": password}
 
-            r = requests.post("http://exp/LoginPage/", data=post_data,
+            r = requests.post("http://exp/api/v1/LoginPage/", data=post_data,
                     headers=auth_headers(request))
 
             if not request_successful(r):
@@ -103,7 +103,7 @@ def login_view(request):
         form = LoginForm()
 
 
-    r = requests.get("http://exp/LoginPage/", headers=auth_headers(request))
+    r = requests.get("http://exp/api/v1/LoginPage/", headers=auth_headers(request))
 
     ctx = {
             "form": form,
@@ -118,9 +118,9 @@ def logout_view(request):
     payload = {
         "token": token
     }
-    r = requests.post("http://exp/LogoutPage/", data=payload)
+    r = requests.post("http://exp/api/v1/LogoutPage/", data=payload)
     if not request_successful(r):
-        return HttpResponse("Error logging out", status=500)
+        return redirect("main_view")
 
     response = redirect("main_view")
     response.set_cookie("auth", "", expires=-1)
@@ -134,7 +134,7 @@ def create_listing_view(request):
     if request.method == 'POST':
         form = ListingForm(data=request.POST)
         if form.is_valid():
-            resp = requests.post('http://exp/CreateTaskPage/', data=form.cleaned_data,
+            resp = requests.post('http://exp/api/v1/CreateTaskPage/', data=form.cleaned_data,
                     headers=auth_headers(request))
             if not request_successful(resp):
                 return render(request, 'app/createlisting.html',
@@ -147,7 +147,7 @@ def create_listing_view(request):
     else:
         form = ListingForm()
 
-    r = requests.get("http://exp/CreateTaskPage/", headers=auth_headers(request))
+    r = requests.get("http://exp/api/v1/CreateTaskPage/", headers=auth_headers(request))
 
     data = r.json()
     user = data.get("user", None)
