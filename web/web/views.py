@@ -66,7 +66,7 @@ def signup_view(request):
                     "error": data["error"],
                 }
                 return render(request, 'app/createuser.html', ctx)
-            response = redirect("logout_view")
+            response = redirect("login_view")
             return response
     else:
         account_form = UserForm()
