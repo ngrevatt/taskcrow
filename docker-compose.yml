@@ -51,3 +51,4 @@ batch:
    links:
       - kafka:kafka
       - es:es
+   command: bash -c "python batch_index.py"
