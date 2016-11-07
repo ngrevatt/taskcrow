@@ -1,0 +1,23 @@
+{% extends "app/base.html" %}
+
+{% block styles %}
+  {{ block.super }}
+{% endblock styles %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="page-header">Search Results: "{{ query }}"</h1>
+      {{ search_results | length }} result{{ search_results | pluralize }}
+    </div>
+  </div>
+  <div class="row">
+    <ul>
+      {% for listing in search_results %}
+        <li>{{ listing }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock content %}

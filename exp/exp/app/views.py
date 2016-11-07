@@ -1,5 +1,6 @@
 import requests
 import json
+from elasticsearch import Elasticsearch
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -118,3 +119,22 @@ class LogoutPage(APIView):
         return Response(lr.json(), status=lr.status_code)
 
 
+class SearchPage(APIView):
+    def get(self, request):
+        query = request.GET.get("query", "")
+
+        es = Elasticsearch(["es"])
+
+        body = {
+            "query": {
+                "query_string": {
+                    "query": query,
+                }
+            },
+            "size": 20,
+        }
+        es.search(index="task_index", body=body)
+
+        return Response({
+            "results": results,
+        })

@@ -23,4 +23,5 @@ urlpatterns = [
     url(r"^api/v1/CategoriesPage/$", CategoriesPage.as_view()),
     url(r"^api/v1/CategoryTaskListPage/$", CategoryTaskListPage.as_view()),
     url(r"^api/v1/TaskDetailPage/$", TaskDetailPage.as_view()),
+    url(r"^api/v1/SearchPage/$", SearchPage.as_view()),
 ]

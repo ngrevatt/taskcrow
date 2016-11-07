@@ -162,4 +162,18 @@ def create_listing_view(request):
 
     return render(request, 'app/createlisting.html', ctx)
 
+def search_view(request):
+    query = request.GET.get("query", "")
+
+    payload = {
+        "query": query
+    }
+    r = requests.get("http://exp/api/v1/SearchPage/", params=payload)
+
+    results = r.json()["results"]
+    ctx = {
+        "query": query,
+        "search_results": results,
+    }
+    return render(request, "app/search.html", ctx)
 

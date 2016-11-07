@@ -27,4 +27,6 @@ urlpatterns = [
     url(r"^signup/$", views.signup_view, name="signup_view"),
     url(r"^create_listing/$", views.create_listing_view,
         name="create_listing_view"),
+    url(r"^search/$", views.search_view,
+        name="search_view"),
 ]
