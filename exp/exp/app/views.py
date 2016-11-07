@@ -133,7 +133,7 @@ class SearchPage(APIView):
             },
             "size": 20,
         }
-        es.search(index="listing_index", body=body)
+        results = es.search(index="listing_index", body=body)
 
         return Response({
             "results": results,

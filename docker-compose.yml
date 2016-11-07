@@ -33,23 +33,24 @@ web:
   command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/web/wsgi.py --url-alias /static /app/collected_static --port 80"
 
 kafka:
-   image: spotify/kafka
-   container_name: kafka
-   environment:
-      ADVERTISED_HOST: kafka
-      ADVERTISED_PORT: 9092
-   hostname: kafka
+  image: spotify/kafka
+  container_name: kafka
+  environment:
+    ADVERTISED_HOST: kafka
+    ADVERTISED_PORT: 9092
+  hostname: kafka
 
 es:
-   image: elasticsearch:2.0
-   container_name: es
-   ports:
-      - "9200:9200"
+  image: elasticsearch:5.0
+  container_name: es
+  ports:
+    - "9200:9200"
 
 batch:
-   image: tp33/django
-   container_name: batch
-   links:
-      - kafka
-      - es
-   command: bash -c "python batch_index.py"
+  build: ./batch
+  links:
+    - kafka
+    - es
+  volumes:
+    - "$PWD/batch:/app"
+  command: bash -c "python /app/batch_index.py"

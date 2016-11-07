@@ -32,6 +32,12 @@ webshell:
 dbshell:
 	docker run -it --name mysql-cmdline --rm --link mysql:db mysql:5.7.14 /bin/bash
 
+batchshell:
+	docker exec -it batch /bin/bash
+
+kafkashell:
+	docker exec -it kafka /bin/bash
+
 test:
 	docker exec -it taskcrow_models_1 python /app/manage.py test
 
