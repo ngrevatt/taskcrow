@@ -1,5 +1,5 @@
 import json
-from django.test import TestCase, Client
+from django.test import TestCase 
 from django.contrib.auth import hashers
 from .models import *
 
@@ -138,7 +138,7 @@ class ModelsTestCase(TestCase):
 
     def test_task_create(self):
         payload = {
-            "description": "Bleach the fence",
+            "description": "Bleach th efence",
             "cost": 150,
             "created_date": "2016-09-15T17:02:00Z",
             "due_date": "2016-09-23T05:02:00Z",

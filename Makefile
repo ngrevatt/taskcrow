@@ -40,6 +40,10 @@ kafkashell:
 
 test:
 	docker exec -it taskcrow_models_1 python /app/manage.py test
+	docker exec -d kafka /bin/bash
+	docker exec -d taskcrow_es_1 /bin/bash
+	docker exec -d batch /bin/bash
+	docker exec -it taskcrow_exp_1 python /app/manage.py test
 
 agnes:
 	rm -rf ../cs4501/db
