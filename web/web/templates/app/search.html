@@ -15,7 +15,7 @@
   <div class="row">
     <ul>
       {% for listing in search_results %}
-        <li>{{ listing }}</li>
+      <li><a href="{% url 'task_detail_view' listing.id %}">{{ listing.description  }} for ${{ listing.cost  }}</a></li>
       {% endfor %}
     </ul>
   </div>

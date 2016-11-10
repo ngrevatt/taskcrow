@@ -14,6 +14,7 @@ exp:
   links:
     - models
     - es
+    - kafka
   volumes:
     - "$PWD/exp:/app"
   ports:
@@ -42,7 +43,8 @@ kafka:
 
 es:
   image: elasticsearch:5.0
-  container_name: es
+  links:
+    - models
   ports:
     - "9200:9200"
 

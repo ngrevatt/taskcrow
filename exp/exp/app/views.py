@@ -1,6 +1,7 @@
 import requests
 import json
 from elasticsearch import Elasticsearch
+from kafka import KafkaProducer
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -86,7 +87,12 @@ class CreateTaskPage(APIView):
             "category": request.POST.get("category", ""),
         }
 
+
         r = requests.post("http://models/api/v1/task/", data=payload, headers=auth_headers(request))
+
+        producer = KafkaProducer(bootstrap_servers="kafka:9092")
+        producer.send("new-listings-topic", r.text.encode("utf-8"))
+
         return Response({
             "task": r.json(),
             "user": user,
@@ -136,5 +142,5 @@ class SearchPage(APIView):
         results = es.search(index="listing_index", body=body)
 
         return Response({
-            "results": results,
+            "results": [h["_source"] for h in results["hits"]["hits"]],
         })

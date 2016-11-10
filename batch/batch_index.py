@@ -27,11 +27,12 @@ while True:
             break
 
 es = Elasticsearch(['es'])
-es.indices.create(index='listing_index')
+if not es.indices.exists("listing_index"):
+    es.indices.create(index='listing_index')
 
 for message in consumer:
     listing = json.loads((message.value).decode('utf-8'))
     print(listing)
     es.index(index='listing_index', doc_type='listing', id=listing['id'], body=listing)
 
-    es.indicies.refresh(index="listing_index")
+    es.indices.refresh(index="listing_index")

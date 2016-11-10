@@ -138,7 +138,7 @@ def create_listing_view(request):
                     headers=auth_headers(request))
             if not request_successful(resp):
                 return render(request, 'app/createlisting.html',
-                        {"form": form, "error": "There was an error creating this task"})
+                        {"form": form, "error": "There was an error creating this task: {}".format(resp.text)})
 
             data = resp.json()
             if "error" in data:
