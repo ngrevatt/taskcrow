@@ -40,12 +40,9 @@ kafkashell:
 
 test:
 	docker exec -it taskcrow_models_1 python /app/manage.py test
-	docker exec -d kafka /bin/bash
-	docker exec -d taskcrow_es_1 /bin/bash
-	docker exec -d batch /bin/bash
 	docker exec -it taskcrow_exp_1 python /app/manage.py test
 
 agnes:
 	rm -rf ../cs4501/db
 	mkdir ../cs4501/db
-	docker run --name mysql -d -e MYSQL\_ROOT\_PASSWORD='$$3cureUS' -v "${PWD}/../cs4501/db":/var/lib/mysql mysql:5.7.14
+	docker run --name mysql -d -e MYSQL\_ROOT\_PASWORD='$$3cureUS' -v "${PWD}/../cs4501/db":/var/lib/mysql mysql:5.7.14
