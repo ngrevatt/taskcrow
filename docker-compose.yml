@@ -43,8 +43,6 @@ kafka:
 
 es:
   image: elasticsearch:5.0
-  links:
-    - models
   ports:
     - "9200:9200"
 
@@ -53,6 +51,10 @@ batch:
   links:
     - kafka
     - es
+    - models
   volumes:
     - "$PWD/batch:/app"
   command: bash -c "python /app/batch_index.py"
+  environment:
+    PYTHONUNBUFFERED: 1
+
