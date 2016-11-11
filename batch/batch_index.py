@@ -11,20 +11,12 @@ class BatchJob(object):
         self.consumer = consumer
         self.es = es
 
-    def run(self):
-        while True:
-            try:
-                r = requests.get("http://es:9200/")
-            except:
-                pass
-            else:
-                if r.status_code == 200:
-                    break
-            time.sleep(5)
 
+    def init(self):
         self.es.indices.create(index='listing_index', ignore=400)
 
 
+    def preload(self):
         # Preload index
         while True:
             try:
@@ -40,6 +32,8 @@ class BatchJob(object):
             self.es.index(index='listing_index', doc_type='listing', id=record["id"], body=record)
         es.indices.refresh(index="listing_index")
 
+
+    def run(self):
         # Digest queue
         for message in self.consumer:
             listing = json.loads((message.value).decode('utf-8'))
@@ -58,7 +52,19 @@ if __name__ == "__main__":
         else:
             break
 
+    while True:
+        try:
+            r = requests.get("http://es:9200/")
+        except:
+            pass
+        else:
+            if r.status_code == 200:
+                break
+        time.sleep(5)
+
     es = Elasticsearch(['es'])
     b = BatchJob(consumer, es)
+    b.init()
+    b.preload()
     b.run()
 

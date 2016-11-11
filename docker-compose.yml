@@ -35,7 +35,6 @@ web:
 
 kafka:
   image: spotify/kafka
-  container_name: kafka
   environment:
     ADVERTISED_HOST: kafka
     ADVERTISED_PORT: 9092
