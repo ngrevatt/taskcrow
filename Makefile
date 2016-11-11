@@ -42,6 +42,10 @@ test:
 	docker exec -it taskcrow_models_1 python /app/manage.py test
 	docker exec -it taskcrow_exp_1 python /app/manage.py test
 
+test2:
+	docker build -t taskcrow/webtest webtest
+	docker run --rm --link taskcrow_selenium_1:selenium -v $(PWD)/webtest:/app -it taskcrow/webtest python -m unittest tests
+
 agnes:
 	rm -rf ../cs4501/db
 	mkdir ../cs4501/db

@@ -58,3 +58,10 @@ batch:
   environment:
     PYTHONUNBUFFERED: 1
 
+selenium:
+  image: selenium/standalone-chrome:3.0.1-aluminum
+  links:
+    - web
+
+
+
