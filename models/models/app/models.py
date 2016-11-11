@@ -9,7 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class User(models.Model):
-    username = models.CharField(max_length=128)
+    username = models.CharField(max_length=128, unique=True)
     password = models.CharField(max_length=128)
 
     first_name = models.CharField(max_length=128)

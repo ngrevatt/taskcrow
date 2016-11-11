@@ -1,5 +1,6 @@
 import requests
 import json
+from json.decoder import JSONDecodeError
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import LoginForm
@@ -56,14 +57,21 @@ def signup_view(request):
             post_data = {'username': username, 'password': password, 'first_name': first_name, 'last_name': last_name,
                          'email': email, 'phone_number': phone_number}
             resp = requests.post('http://exp/api/v1/SignUpPage/', data=post_data)
+
+            try:
+                data = resp.json()
+                error = data.get("error", "")
+            except JSONDecodeError:
+                error = "An unknown error occurred"
+
             if not request_successful(resp):
-                return render(request, 'app/createuser.html', {"account_form": account_form})
+                return render(request, 'app/createuser.html', {"account_form": account_form, "error": error})
 
             data = resp.json()
             if "error" in data:
                 ctx = {
                     "account_form": account_form,
-                    "error": data["error"],
+                    "error": error,
                 }
                 return render(request, 'app/createuser.html', ctx)
             response = redirect("login_view")
