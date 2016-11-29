@@ -8,6 +8,7 @@ models:
     - "8002:80"
     - "8082:8080"
   command: bash -c "python /app/manage.py migrate && python /app/manage.py loaddata /app/fixtures.json && mod_wsgi-express start-server --reload-on-changes /app/models/wsgi.py --url-alias /static /app/collected_static --port 80"
+  restart: always
 
 exp:
   build: ./exp
@@ -21,6 +22,7 @@ exp:
     - "8001:80"
     - "8081:8080"
   command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/exp/wsgi.py --url-alias /static /app/collected_static --port 80"
+  restart: always
 
 web:
   build: ./web
@@ -32,6 +34,7 @@ web:
     - "8000:80"
     - "8080:8080"
   command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes /app/web/wsgi.py --url-alias /static /app/collected_static --port 80"
+  restart: always
 
 kafka:
   image: spotify/kafka
@@ -39,11 +42,13 @@ kafka:
     ADVERTISED_HOST: kafka
     ADVERTISED_PORT: 9092
   hostname: kafka
+  restart: always
 
 es:
   image: elasticsearch:5.0
   ports:
     - "9200:9200"
+  restart: always
 
 batch:
   build: ./batch
@@ -56,6 +61,7 @@ batch:
   command: bash -c "python /app/batch_index.py"
   environment:
     PYTHONUNBUFFERED: 1
+  restart: always
 
 selenium:
   image: selenium/standalone-chrome:3.0.1-aluminum
