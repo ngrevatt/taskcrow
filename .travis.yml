@@ -8,7 +8,7 @@ install:
     - make mysql
     - sleep 30
     - make initmysql
-    - docker-compuse up -d 
+    - docker-compose up -d 
 
 script:
     - make test
