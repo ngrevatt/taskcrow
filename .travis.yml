@@ -1,5 +1,5 @@
 sudo: required 
-dist: yakkety
+dist: trusty
 
 services:
     - docker
