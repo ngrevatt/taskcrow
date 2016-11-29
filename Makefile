@@ -38,13 +38,14 @@ batchshell:
 kafkashell:
 	docker exec -it kafka /bin/bash
 
-test: travis
+test:
+	docker exec -it taskcrow_models_1 python /app/manage.py test
 	docker exec -it taskcrow_batch_1 python -m unittest tests
 	docker build -t taskcrow/webtest webtest
 	docker run --rm --link taskcrow_selenium_1:selenium -v "$(PWD)/webtest:/app" -it taskcrow/webtest python -m unittest tests
 
-travis:
-	docker-compose exec models python /app/manage.py test
+travis_test:
+	docker exec -it taskcrow_models_run_1 python /app/manage.py test
 
 agnes:
 	rm -rf ../cs4501/db
