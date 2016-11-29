@@ -84,6 +84,18 @@ class LogoutView(views.APIView):
 class SignupView(views.APIView):
     def post(self, request):
         p = request.POST
+        fields = ["username", "password", "first_name", "last_name", "email", "phone_number"]
+        for f in fields:
+            if f not in p:
+                return JsonResponse({
+                    "error": "Missing field {}".format(f),
+                }, status=400)
+
+        if User.objects.filter(username=p["username"]).exists():
+            return JsonResponse({
+                "error": "Username already exists",
+            }, status=400)
+
         User.objects.create(
             username=p["username"],
             password=hashers.make_password(p["password"]),
