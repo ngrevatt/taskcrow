@@ -44,7 +44,7 @@ test: travis
 	docker run --rm --link taskcrow_selenium_1:selenium -v "$(PWD)/webtest:/app" -it taskcrow/webtest python -m unittest tests
 
 travis:
-	docker exec -it taskcrow_models_1 python /app/manage.py test
+	docker-compose exec models python /app/manage.py test
 
 agnes:
 	rm -rf ../cs4501/db
