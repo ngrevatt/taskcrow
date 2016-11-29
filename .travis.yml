@@ -1,0 +1,18 @@
+sudo: required 
+dist: yakkety
+
+services:
+    - docker
+
+install:
+    - make mysql
+    - sleep 30
+    - make initmysql
+    - docker-compuse up -d 
+
+script:
+    - make test
+
+after_script:
+    - docker-compose stop
+    - make stopmysql
