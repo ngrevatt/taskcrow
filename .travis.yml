@@ -8,11 +8,11 @@ install:
     - make mysql
     - sleep 30
     - make initmysql
-    - docker-compose up  
+    - docker-compose run -d models  
 
 script:
-    - make test
+    - make travis
 
 after_script:
-    - docker-compose stop
+    - docker-compose stop 
     - make stopmysql
