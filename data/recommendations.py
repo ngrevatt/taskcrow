@@ -1,17 +1,22 @@
 from pyspark import SparkContext
+from itertools import combinations
 
 sc = SparkContext("spark://spark-master:7077", "PopularItems")
 
-data = sc.textFile("/tmp/data/access.log", 2)     # each worker loads a piece of the data file
+data = sc.textFile("/tmp/data/access.log", 2)
 
-pairs = data.map(lambda line: line.split("\t"))   # tell each worker to split each line of it's partition
-pages = pairs.map(lambda pair: (pair[1], 1))      # re-layout the data to ignore the user id
-count = pages.reduceByKey(lambda x,y: x+y)        # shuffle the data so that each key is only on one worker
-                                                  # and then reduce all the values by adding them together
+pairs = data.map(lambda line: line.split())
+views = pairs.groupByKey()
+view_pairs = views.map(lambda user_items: (user_items[0], list(combinations(user_items[1], 2))))
+inverted_view_pairs = view_pairs.map(lambda kv: (tuple(kv[1]), kv[0]))
+view_pair_users = inverted_view_pairs.groupByKey()
+view_pair_counts = view_pair_users.map(lambda users: len(users))
+filtered_view_pair_counts = view_pair_counts.filter(lambda count: count >= 3)
 
-output = count.collect()                          # bring the data back to the master node so we can print it out
-for page_id, count in output:
-    print ("page_id %s count %d" % (page_id, count))
-print ("Popular items done")
+output = filtered_view_pair_counts.collect()
+print("=============================================================")
+for item_id, count in output:
+    print ("item_id %s count %d" % (item_id, count))
+print("=============================================================")
 
 sc.stop()
