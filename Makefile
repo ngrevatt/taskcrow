@@ -51,3 +51,13 @@ agnes:
 	rm -rf ../cs4501/db
 	mkdir ../cs4501/db
 	docker run --name mysql -d -e MYSQL\_ROOT\_PASWORD='$$3cureUS' -v "${PWD}/../cs4501/db":/var/lib/mysql mysql:5.7.14
+
+sparkup:
+	docker-compose -f docker-compose.spark.yml up --build
+
+sparkdown:
+	docker-compose -f docker-compose.spark.yml rm
+
+sparkjob:
+	docker exec -it spark-master bin/spark-submit --master spark://spark-master:7077 --total-executor-cores 2 --executor-memory 512m /tmp/data/recommendations.py
+
