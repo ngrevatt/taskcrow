@@ -5,18 +5,19 @@ sc = SparkContext("spark://spark-master:7077", "PopularItems")
 
 data = sc.textFile("/tmp/data/access.log", 2)
 
-pairs = data.map(lambda line: line.split())
-views = pairs.groupByKey()
-view_pairs = views.map(lambda user_items: (user_items[0], list(combinations(user_items[1], 2))))
-inverted_view_pairs = view_pairs.map(lambda kv: (tuple(kv[1]), kv[0]))
-view_pair_users = inverted_view_pairs.groupByKey()
-view_pair_counts = view_pair_users.map(lambda users: len(users))
-filtered_view_pair_counts = view_pair_counts.filter(lambda count: count >= 3)
+distinct_lines = data.distinct()
 
-output = filtered_view_pair_counts.collect()
+pairs = distinct_lines.map(lambda line: line.split())
+views = pairs.groupByKey()
+view_pairs = views.flatMap(lambda user_items: [(user_items[0], pair) for pair in combinations(user_items[1], 2)])
+inverted_view_pairs = view_pairs.map(lambda kv: (tuple(sorted(kv[1])), 1))
+counts = inverted_view_pairs.reduceByKey(lambda a, b: a + b)
+filtered_counts = counts.filter(lambda kv: kv[1] >= 3)
+
+output = filtered_counts.collect()
 print("=============================================================")
-for item_id, count in output:
-    print ("item_id %s count %d" % (item_id, count))
+for pair, count in output:
+    print("co-view: {}; count: {}".format(pair, count))
 print("=============================================================")
 
 sc.stop()
